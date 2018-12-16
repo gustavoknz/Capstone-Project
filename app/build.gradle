@@ -11,10 +11,17 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            debuggable true
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    buildTypes.each {
+        it.buildConfigField 'String', 'GoogleSecAPIKEY', GoolgeAPIKey
     }
 }
 
