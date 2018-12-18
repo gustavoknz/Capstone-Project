@@ -1,5 +1,7 @@
 package com.bora.gustavo;
 
+import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -14,23 +16,81 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
     private final static String TAG = "MainActivity";
     private GoogleMap mMap;
+    private FusedLocationProviderClient mFusedLocationClient;
+    private Location mLastLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d(TAG, "All permission are granted");
+                            try {
+                                mFusedLocationClient.getLastLocation()
+                                        .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
+                                            @Override
+                                            public void onSuccess(Location location) {
+                                                // Got last known location. In some rare situations this can be null.
+                                                if (location != null) {
+                                                    mLastLocation = location;
+                                                    addMarker("You are here", new LatLng(location.getLatitude(), location.getLongitude()));
+                                                }
+                                            }
+                                        });
+                            } catch (SecurityException se) {
+                                Log.e(TAG, "Should never get here");
+                            }
+                        } else {
+                            Log.d(TAG, "Not all permissions were granted :|");
+                        }
+
+                        // check for permanent denial of any permission
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            Log.d(TAG, "User permanently denied a permission :(");
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        Log.d(TAG, "Showing rationale...");
+                        token.continuePermissionRequest();
+                    }
+                })
+                .onSameThread()
+                .check();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -66,12 +126,18 @@ public class MainActivity extends AppCompatActivity
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is ready!");
         mMap = googleMap;
-
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-3.08, -60.02);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        if (mLastLocation == null) {
+            Toast.makeText(this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
+        } else {
+            LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+            addMarker("You are here", latLng);
+        }
         Log.d(TAG, "I am done here");
+    }
+
+    private void addMarker(String title, LatLng latLng) {
+        mMap.addMarker(new MarkerOptions().position(latLng).title(title));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
     }
 
     @Override
