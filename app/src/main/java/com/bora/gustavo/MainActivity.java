@@ -27,6 +27,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -41,11 +43,14 @@ public class MainActivity extends AppCompatActivity
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         Dexter.withActivity(this)
