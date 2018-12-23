@@ -9,10 +9,25 @@ public class Gym {
     private float longitude;
     private int votesUp;
     private int votesDown;
+    private String address;
     private Date registeredAt;
     private List<Equipment> equipmentList;
 
     public Gym() {
+    }
+
+    @Override
+    public String toString() {
+        return "Gym{" +
+                "id=" + id +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", votesUp=" + votesUp +
+                ", votesDown=" + votesDown +
+                ", address='" + address + '\'' +
+                ", registeredAt=" + registeredAt +
+                ", equipmentList=" + equipmentList +
+                '}';
     }
 
     public int getId() {
@@ -53,6 +68,14 @@ public class Gym {
 
     public void setVotesDown(int votesDown) {
         this.votesDown = votesDown;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public Date getRegisteredAt() {
