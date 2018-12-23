@@ -48,8 +48,14 @@ dependencies {
     implementation 'android.arch.core:runtime:1.1.1'
 
     testImplementation 'junit:junit:4.12'
+    androidTestImplementation ('com.android.support.test:rules:0.5') {
+        exclude module: 'support-annotations'
+    }
+
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation ('com.android.support.test.espresso:espresso-core:3.0.2') {
+        exclude module: 'support-annotations'
+    }
 }
 
 apply plugin: 'com.google.gms.google-services'

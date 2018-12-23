@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         if (mapFragment == null) {
             Log.wtf(TAG, "mapFragment is null :(");
         } else {
-            Log.d(TAG, "Call me when ready");
+            Log.d(TAG, "Call me when map is ready");
             mapFragment.getMapAsync(this);
         }
     }
