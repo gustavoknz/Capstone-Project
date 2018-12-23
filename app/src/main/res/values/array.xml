@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="equipments_list">
+        <item>Gira ombro</item>
+        <item>Agachamento</item>
+        <item>Caminhada</item>
+        <item>Rosca direta</item>
+        <item>Leg press</item>
+        <item>Levamento de peso</item>
+        <item>Bíceps</item>
+    </string-array>
+</resources>

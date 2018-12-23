@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/form_gym_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:hint="Address"
+        android:inputType="textPostalAddress" />
+
+    <GridView
+        android:id="@+id/form_gym_equipments_grid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:numColumns="2"
+        android:clickable="true"
+        android:focusable="true"
+        android:choiceMode="multipleChoice"
+        app:layout_constraintTop_toBottomOf="@id/form_gym_address" />
+</android.support.constraint.ConstraintLayout>

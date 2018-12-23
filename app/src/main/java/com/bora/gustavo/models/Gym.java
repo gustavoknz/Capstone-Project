@@ -1,6 +1,7 @@
 package com.bora.gustavo.models;
 
 import java.util.Date;
+import java.util.List;
 
 public class Gym {
     private int id;
@@ -9,6 +10,7 @@ public class Gym {
     private int votesUp;
     private int votesDown;
     private Date registeredAt;
+    private List<Equipment> equipmentList;
 
     public Gym() {
     }
@@ -59,5 +61,13 @@ public class Gym {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public List<Equipment> getEquipmentList() {
+        return equipmentList;
+    }
+
+    public void setEquipmentList(List<Equipment> equipmentList) {
+        this.equipmentList = equipmentList;
     }
 }

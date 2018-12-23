@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             private void showNewGymDialog() {
-                new NewGymDialogFragment().show(getSupportFragmentManager(), "TEGUI");
+                new NewGymDialogFragment().show(getSupportFragmentManager(), TAG);
             }
         });
 
