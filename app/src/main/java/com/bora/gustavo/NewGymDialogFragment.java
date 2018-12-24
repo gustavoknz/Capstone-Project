@@ -2,7 +2,6 @@ package com.bora.gustavo;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -30,10 +28,10 @@ import butterknife.ButterKnife;
 public class NewGymDialogFragment extends DialogFragment {
     private static final String TAG = "NewGymDialogFragment";
     @BindView(R.id.form_gym_equipments_grid)
-    GridView equipmentsListGrid;
+    GridView mEquipmentsListGrid;
 
     @BindView(R.id.form_gym_address)
-    EditText addressView;
+    EditText mAddressView;
 
     @NonNull
     @Override
@@ -54,45 +52,36 @@ public class NewGymDialogFragment extends DialogFragment {
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_multiple_choice,
                 getResources().getStringArray(R.array.equipments_list));
-        equipmentsListGrid.setAdapter(arrayAdapter);
-        equipmentsListGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int index, long l) {
-                Object clickItemObj = adapterView.getAdapter().getItem(index);
-                Toast.makeText(getContext(), "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
-            }
+        mEquipmentsListGrid.setAdapter(arrayAdapter);
+        mEquipmentsListGrid.setOnItemClickListener((adapterView, view, index, l) -> {
+            Object clickItemObj = adapterView.getAdapter().getItem(index);
+            Toast.makeText(getContext(), "You clicked " + clickItemObj.toString(), Toast.LENGTH_SHORT).show();
         });
 
         builder.setView(dialogView);
         builder.setMessage(R.string.new_gym_dialog_message);
-        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Log.d(TAG, "User tapped save on the dialog");
-                SparseBooleanArray checked = equipmentsListGrid.getCheckedItemPositions();
-                Toast.makeText(getContext(), checked.size() + " items selected", Toast.LENGTH_SHORT).show();
-                Gym newGym = new Gym();
-                List<Equipment> equipmentList = new ArrayList<>(checked.size());
-                for (int i = 0; i < arrayAdapter.getCount(); i++) {
-                    if (checked.get(i)) {
-                        equipmentList.add(new Equipment(i, arrayAdapter.getItem(i)));
-                    }
+        builder.setPositiveButton(R.string.save, (dialog, id) -> {
+            Log.d(TAG, "User tapped save on the dialog");
+            SparseBooleanArray checked = mEquipmentsListGrid.getCheckedItemPositions();
+            Toast.makeText(getContext(), checked.size() + " items selected", Toast.LENGTH_SHORT).show();
+            Gym newGym = new Gym();
+            List<Equipment> equipmentList = new ArrayList<>(checked.size());
+            for (int i = 0; i < arrayAdapter.getCount(); i++) {
+                if (checked.get(i)) {
+                    equipmentList.add(new Equipment(i, arrayAdapter.getItem(i)));
                 }
-                newGym.setId(0);
-                newGym.setLatitude(0f);
-                newGym.setLongitude(0f);
-                newGym.setVotesDown(0);
-                newGym.setVotesUp(0);
-                newGym.setAddress(addressView.getText().toString());
-                newGym.setRegisteredAt(new Date());
-                newGym.setEquipmentList(equipmentList);
-                Log.d(TAG, "Adding a new gym: " + newGym);
             }
+            newGym.setId("0");
+            newGym.setLatitude(0f);
+            newGym.setLongitude(0f);
+            newGym.setVotesDown(0);
+            newGym.setVotesUp(0);
+            newGym.setAddress(mAddressView.getText().toString());
+            newGym.setRegisteredAt(new Date());
+            newGym.setEquipmentList(equipmentList);
+            Log.d(TAG, "Adding a new gym: " + newGym);
         });
-        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                Log.d(TAG, "User cancelled the dialog");
-            }
-        });
+        builder.setNegativeButton(R.string.cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
         return builder.create();
     }
 }

@@ -21,7 +21,8 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField 'String', 'GoogleSecAPIKEY', GoolgeAPIKey
+        it.buildConfigField 'String', 'GOOGLE_SEC_API_KEY', GoolgeAPIKey
+        it.buildConfigField 'String', 'FIREBASE_URL', FirebaseUrl
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8

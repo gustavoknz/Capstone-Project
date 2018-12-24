@@ -1,5 +1,7 @@
 package com.bora.gustavo.models;
 
+import android.support.annotation.NonNull;
+
 public class Equipment {
     private int id;
     private String name;
@@ -7,6 +9,7 @@ public class Equipment {
     public Equipment() {
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Equipment{" +

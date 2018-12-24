@@ -1,6 +1,7 @@
-package com.bora.gustavo;
+package com.bora.gustavo.activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,6 +18,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bora.gustavo.NewGymDialogFragment;
+import com.bora.gustavo.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,7 +28,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.karumi.dexter.Dexter;
@@ -38,6 +41,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +50,9 @@ public class MainActivity extends AppCompatActivity
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
     private DatabaseReference mDatabase;
+    private FirebaseAuth mAuth;
+    private boolean mMarkerAdded = false;
+
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbar)
@@ -61,7 +68,17 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.main_map);
+        if (mapFragment == null) {
+            Log.wtf(TAG, "mapFragment is null :(");
+        } else {
+            Log.d(TAG, "Call me when map is ready");
+            mapFragment.getMapAsync(this);
+        }
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         Dexter.withActivity(this)
@@ -76,14 +93,13 @@ public class MainActivity extends AppCompatActivity
                             Log.d(TAG, "All permission are granted");
                             try {
                                 mFusedLocationClient.getLastLocation()
-                                        .addOnSuccessListener(MainActivity.this, new OnSuccessListener<Location>() {
-                                            @Override
-                                            public void onSuccess(Location location) {
-                                                // Got last known location. In some rare situations this can be null.
-                                                if (location != null) {
-                                                    mLastLocation = location;
-                                                    addMarker("You are here", new LatLng(location.getLatitude(), location.getLongitude()));
-                                                }
+                                        .addOnSuccessListener(MainActivity.this, location -> {
+                                            // Got last known location. In some rare situations this can be null.
+                                            if (location == null) {
+                                                Toast.makeText(MainActivity.this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                mLastLocation = location;
+                                                addMarker("You are here", new LatLng(location.getLatitude(), location.getLongitude()));
                                             }
                                         });
                             } catch (SecurityException se) {
@@ -109,43 +125,24 @@ public class MainActivity extends AppCompatActivity
                 .check();
         setSupportActionBar(mToolbar);
 
-        mFab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                //        .setAction("Action", null).show();
-                showNewGymDialog();
-            }
-
-            private void showNewGymDialog() {
-                new NewGymDialogFragment().show(getSupportFragmentManager(), TAG);
-            }
-        });
-
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+    }
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.main_map);
-        if (mapFragment == null) {
-            Log.wtf(TAG, "mapFragment is null :(");
-        } else {
-            Log.d(TAG, "Call me when map is ready");
-            mapFragment.getMapAsync(this);
-        }
+    @OnClick(R.id.fab)
+    public void onFabClicked(View view) {
+        new NewGymDialogFragment().show(getSupportFragmentManager(), TAG);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is ready!");
         mMap = googleMap;
-        if (mLastLocation == null) {
-            Toast.makeText(this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
-        } else {
+        if (mLastLocation != null) {
             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             addMarker("You are here", latLng);
         }
@@ -153,8 +150,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void addMarker(String title, LatLng latLng) {
-        mMap.addMarker(new MarkerOptions().position(latLng).title(title));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+        if (mMap != null && !mMarkerAdded) {
+            mMarkerAdded = true;
+            mMap.addMarker(new MarkerOptions().position(latLng).title(title));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
+        }
     }
 
     @Override
@@ -195,10 +195,15 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
+            if (mAuth.getCurrentUser() == null) {
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            } else {
+                Log.d(TAG, "I know you!");
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+            }
         } else if (id == R.id.nav_favorites) {
         } else if (id == R.id.nav_contributions) {
         } else if (id == R.id.nav_settings) {
-        } else if (id == R.id.nav_login) {
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

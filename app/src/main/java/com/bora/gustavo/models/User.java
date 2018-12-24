@@ -1,9 +1,11 @@
 package com.bora.gustavo.models;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 public class User {
-    private int id;
+    private String id;
     private String name;
     private String facebookId;
     private String email;
@@ -16,11 +18,27 @@ public class User {
     public User() {
     }
 
-    public int getId() {
+    @NonNull
+    @Override
+    public String toString() {
+        return "User{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", facebookId='" + facebookId + '\'' +
+                ", email='" + email + '\'' +
+                ", lastLatitude=" + lastLatitude +
+                ", lastLongitude=" + lastLongitude +
+                ", votesUp=" + votesUp +
+                ", votesDown=" + votesDown +
+                ", joinedAt=" + joinedAt +
+                '}';
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

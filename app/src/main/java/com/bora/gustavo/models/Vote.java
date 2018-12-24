@@ -1,5 +1,7 @@
 package com.bora.gustavo.models;
 
+import android.support.annotation.NonNull;
+
 import java.util.Date;
 
 public class Vote {
@@ -9,6 +11,17 @@ public class Vote {
     private Date date;
 
     public Vote() {
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Vote{" +
+                "userId=" + userId +
+                ", gymId=" + gymId +
+                ", up=" + up +
+                ", date=" + date +
+                '}';
     }
 
     public int getUserId() {
