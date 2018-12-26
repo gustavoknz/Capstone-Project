@@ -5,12 +5,11 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 public class User {
-    private String id;
     private String name;
     private String facebookId;
     private String email;
-    private float lastLatitude;
-    private float lastLongitude;
+    private double lastLatitude;
+    private double lastLongitude;
     private int votesUp;
     private int votesDown;
     private Date joinedAt;
@@ -22,8 +21,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", facebookId='" + facebookId + '\'' +
                 ", email='" + email + '\'' +
                 ", lastLatitude=" + lastLatitude +
@@ -32,14 +30,6 @@ public class User {
                 ", votesDown=" + votesDown +
                 ", joinedAt=" + joinedAt +
                 '}';
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -66,19 +56,19 @@ public class User {
         this.email = email;
     }
 
-    public float getLastLatitude() {
+    public double getLastLatitude() {
         return lastLatitude;
     }
 
-    public void setLastLatitude(float lastLatitude) {
+    public void setLastLatitude(double lastLatitude) {
         this.lastLatitude = lastLatitude;
     }
 
-    public float getLastLongitude() {
+    public double getLastLongitude() {
         return lastLongitude;
     }
 
-    public void setLastLongitude(float lastLongitude) {
+    public void setLastLongitude(double lastLongitude) {
         this.lastLongitude = lastLongitude;
     }
 

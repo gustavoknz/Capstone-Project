@@ -2,11 +2,13 @@ package com.bora.gustavo.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 
 import com.bora.gustavo.NewGymDialogFragment;
 import com.bora.gustavo.R;
+import com.bora.gustavo.helper.LocationHolderSingleton;
+import com.bora.gustavo.models.Gym;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -29,8 +33,11 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -44,14 +51,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
+        implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
+    private static final float MAP_DEFAULT_ZOOM = 15f;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
-    private boolean mMarkerAdded = false;
+    private boolean mMapAnimated = false;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -77,7 +85,7 @@ public class MainActivity extends AppCompatActivity
             mapFragment.getMapAsync(this);
         }
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("gyms");
         mAuth = FirebaseAuth.getInstance();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -98,8 +106,13 @@ public class MainActivity extends AppCompatActivity
                                             if (location == null) {
                                                 Toast.makeText(MainActivity.this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
                                             } else {
+                                                LocationHolderSingleton locationHolder = LocationHolderSingleton.getInstance();
+                                                locationHolder.setLocation(location);
                                                 mLastLocation = location;
-                                                addMarker("You are here", new LatLng(location.getLatitude(), location.getLongitude()));
+                                                if (!mMapAnimated) {
+                                                    mMapAnimated = true;
+                                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), MAP_DEFAULT_ZOOM));
+                                                }
                                             }
                                         });
                             } catch (SecurityException se) {
@@ -123,8 +136,29 @@ public class MainActivity extends AppCompatActivity
                 })
                 .onSameThread()
                 .check();
-        setSupportActionBar(mToolbar);
 
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO iterate
+                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
+                Gym gym = dataSnapshot.getValue(Gym.class);
+                if (gym == null) {
+                    Log.d(TAG, "Could not find any gym");
+                } else {
+                    Log.d(TAG, "Found a gym: " + gym);
+                    addGymToMap(gym);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
+
+        setSupportActionBar(mToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mDrawerLayout.addDrawerListener(toggle);
@@ -133,28 +167,41 @@ public class MainActivity extends AppCompatActivity
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
+    private void addGymToMap(Gym gym) {
+        LatLng latLng = new LatLng(gym.getLatitude(), gym.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(gym.getAddress()));
+    }
+
     @OnClick(R.id.fab)
     public void onFabClicked(View view) {
-        new NewGymDialogFragment().show(getSupportFragmentManager(), TAG);
+        NewGymDialogFragment newGymFragment = new NewGymDialogFragment();
+        newGymFragment.setCallback(this);
+        newGymFragment.show(getSupportFragmentManager(), TAG);
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is ready!");
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        googleMap.setMyLocationEnabled(true);
         mMap = googleMap;
-        if (mLastLocation != null) {
+        if (mLastLocation != null && !mMapAnimated) {
+            mMapAnimated = true;
             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
-            addMarker("You are here", latLng);
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_DEFAULT_ZOOM));
         }
         Log.d(TAG, "I am done here");
     }
 
-    private void addMarker(String title, LatLng latLng) {
-        if (mMap != null && !mMarkerAdded) {
-            mMarkerAdded = true;
-            mMap.addMarker(new MarkerOptions().position(latLng).title(title));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
-        }
+    @Override
+    public void onNewGymAdded(Gym newGym) {
+        LatLng latLng = new LatLng(newGym.getLatitude(), newGym.getLongitude());
+        mMap.addMarker(new MarkerOptions().position(latLng).title(newGym.getAddress()));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_DEFAULT_ZOOM));
+        Toast.makeText(this, "Thanks for adding a new gym", Toast.LENGTH_SHORT).show();
     }
 
     @Override

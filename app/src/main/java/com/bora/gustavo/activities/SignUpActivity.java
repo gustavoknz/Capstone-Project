@@ -10,7 +10,14 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bora.gustavo.R;
+import com.bora.gustavo.helper.LocationHolderSingleton;
+import com.bora.gustavo.helper.Utils;
+import com.bora.gustavo.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +25,7 @@ import butterknife.OnClick;
 
 public class SignUpActivity extends BackActivity {
     private static final String TAG = "SignUpActivity";
+    private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     @BindView(R.id.sign_up_name)
     EditText mInputName;
@@ -36,6 +44,7 @@ public class SignUpActivity extends BackActivity {
 
         //Get Firebase auth instance
         mAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
     }
 
     @Override
@@ -44,7 +53,7 @@ public class SignUpActivity extends BackActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    @OnClick(R.id.sign_up_sign_in_button)
+    @OnClick(R.id.sign_up_login_button)
     public void onSignInClicked(View view) {
         finish();
     }
@@ -83,7 +92,7 @@ public class SignUpActivity extends BackActivity {
                     // signed in user can be handled in the listener.
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Login successfully done");
-                        //startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        addUserToMyTable();
                         finish();
                     } else {
                         Log.d(TAG, "Authentication failed: " + task.getException());
@@ -91,7 +100,47 @@ public class SignUpActivity extends BackActivity {
                 });
     }
 
-    @OnClick(R.id.sign_up_btn_reset_password)
+    private void addUserToMyTable() {
+        String userId = Utils.getUserUid();
+        if (userId == null) {
+            Log.w(TAG, "User id is null :/");
+        } else {
+            Log.w(TAG, "User id is = " + userId);
+            String userKey = mDatabase.push().getKey();
+            Log.w(TAG, "User key is = " + userKey);
+            User newUser = new User();
+            newUser.setName(mInputName.getText().toString());
+            newUser.setJoinedAt(new Date());
+            newUser.setVotesDown(0);
+            newUser.setVotesUp(0);
+            newUser.setFacebookId("");
+            LocationHolderSingleton locationHolder = LocationHolderSingleton.getInstance();
+            newUser.setLastLatitude(locationHolder.getLocation().getLatitude());
+            newUser.setLastLongitude(locationHolder.getLocation().getLongitude());
+            mDatabase.child(userKey).setValue(newUser);
+            /*mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User user = dataSnapshot.getValue(User.class);
+                            if (user == null) {
+                                Log.e(TAG, "User " + userId + " is unexpectedly null");
+                                Toast.makeText(SignUpActivity.this,
+                                        "Error: could not fetch user.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            finish();
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                        }
+                    });*/
+        }
+    }
+
+    @OnClick(R.id.sign_up_reset_password_button)
     public void onResetPasswordClicked(View view) {
         startActivity(new Intent(SignUpActivity.this, ResetPasswordActivity.class));
     }

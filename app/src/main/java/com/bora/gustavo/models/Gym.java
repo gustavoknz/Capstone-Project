@@ -6,9 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Gym {
-    private String id;
-    private float latitude;
-    private float longitude;
+    private double latitude;
+    private double longitude;
     private int votesUp;
     private int votesDown;
     private String address;
@@ -22,8 +21,7 @@ public class Gym {
     @Override
     public String toString() {
         return "Gym{" +
-                "id=" + id +
-                ", latitude=" + latitude +
+                "latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", votesUp=" + votesUp +
                 ", votesDown=" + votesDown +
@@ -33,27 +31,19 @@ public class Gym {
                 '}';
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public float getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(float latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public float getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(float longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
