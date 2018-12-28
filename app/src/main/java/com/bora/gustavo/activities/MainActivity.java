@@ -137,26 +137,37 @@ public class MainActivity extends AppCompatActivity
                 .onSameThread()
                 .check();
 
-        ValueEventListener postListener = new ValueEventListener() {
+        mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                //TODO iterate
-                Iterable<DataSnapshot> iterator = dataSnapshot.getChildren();
-                Gym gym = dataSnapshot.getValue(Gym.class);
-                if (gym == null) {
-                    Log.d(TAG, "Could not find any gym");
-                } else {
-                    Log.d(TAG, "Found a gym: " + gym);
-                    addGymToMap(gym);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Gym gym = postSnapshot.getValue(Gym.class);
+                    Log.d(TAG, "Got gym: " + gym);
+                    if (gym == null) {
+                        Log.e(TAG, "Got a gym == null in my database");
+                    } else {
+                        addGymToMap(gym);
+                    }
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "The read failed: " + databaseError.getCode());
             }
-        };
-        mDatabase.addValueEventListener(postListener);
+        });
+        mAuth.addAuthStateListener(firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() == null) {
+                //User has just signed out
+                Log.d(TAG, "User has signed out. currentUser is = " +
+                        (mAuth.getCurrentUser() == null ? "null" : "not null"));
+            } else {
+                //User has just signed in
+                Log.d(TAG, "User has signed in. currentUser is = " +
+                        (mAuth.getCurrentUser() == null ? "null" : "not null"));
+            }
+        });
 
         setSupportActionBar(mToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -242,6 +253,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_profile) {
+            Log.d(TAG, "Profile clicked");
             if (mAuth.getCurrentUser() == null) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             } else {
@@ -249,8 +261,12 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
         } else if (id == R.id.nav_favorites) {
+            Log.d(TAG, "Favorites clicked");
         } else if (id == R.id.nav_contributions) {
-        } else if (id == R.id.nav_settings) {
+            Log.d(TAG, "Contributions clicked");
+        } else if (id == R.id.nav_logout) {
+            Log.d(TAG, "Logout clicked");
+            mAuth.signOut();
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);

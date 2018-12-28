@@ -17,13 +17,9 @@
             android:icon="@drawable/ic_menu_slideshow"
             android:title="Minhas contribuições" />
         <item
-            android:id="@+id/nav_settings"
+            android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Configurações" />
-        <item
-            android:id="@+id/nav_login"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Login" />
+            android:title="Logout" />
     </group>
 
     <!--<item android:title="Communicate">

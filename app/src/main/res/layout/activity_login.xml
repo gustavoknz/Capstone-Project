@@ -60,7 +60,7 @@
             android:background="@null"
             android:text="Esqueci a senha"
             android:textAllCaps="false"
-            android:textColor="@color/colorAccent" />
+            android:textColor="@color/colorPrimaryDark" />
 
         <Button
             android:id="@+id/login_button_signup"
@@ -70,7 +70,7 @@
             android:background="@null"
             android:text="Cadastrar-se"
             android:textAllCaps="false"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="15dp" />
     </LinearLayout>
 
