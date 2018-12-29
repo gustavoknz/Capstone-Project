@@ -12,6 +12,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -35,11 +36,14 @@ public class NewGymDialogFragment extends DialogFragment {
     private DatabaseReference mDatabase;
     private MainCallback mMainCallback;
 
+    @BindView(R.id.form_gym_address)
+    EditText mAddressView;
+
     @BindView(R.id.form_gym_equipments_grid)
     GridView mEquipmentsListGrid;
 
-    @BindView(R.id.form_gym_address)
-    EditText mAddressView;
+    @BindView(R.id.form_gym_pcd_able)
+    CheckBox mPcdAble;
 
     public void setCallback(MainCallback mainCallback) {
         mMainCallback = mainCallback;
@@ -102,6 +106,7 @@ public class NewGymDialogFragment extends DialogFragment {
             newGym.setVotesUp(0);
             newGym.setAddress(mAddressView.getText().toString());
             newGym.setRegisteredAt(new Date());
+            newGym.setPcdAble(mPcdAble.isChecked());
             newGym.setEquipmentList(equipmentList);
             mDatabase.child(gymKey).setValue(newGym, (firebaseError, ref) -> {
                 if (firebaseError != null) {

@@ -12,6 +12,7 @@ public class Gym {
     private int votesDown;
     private String address;
     private Date registeredAt;
+    private boolean pcdAble;
     private List<Equipment> equipmentList;
 
     public Gym() {
@@ -27,6 +28,7 @@ public class Gym {
                 ", votesDown=" + votesDown +
                 ", address='" + address + '\'' +
                 ", registeredAt=" + registeredAt +
+                ", pcdAble=" + pcdAble +
                 ", equipmentList=" + equipmentList +
                 '}';
     }
@@ -77,6 +79,14 @@ public class Gym {
 
     public void setRegisteredAt(Date registeredAt) {
         this.registeredAt = registeredAt;
+    }
+
+    public boolean isPcdAble() {
+        return pcdAble;
+    }
+
+    public void setPcdAble(boolean pcdAble) {
+        this.pcdAble = pcdAble;
     }
 
     public List<Equipment> getEquipmentList() {

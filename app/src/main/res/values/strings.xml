@@ -8,5 +8,5 @@
     <string name="action_settings">Settings</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
-    <string name="new_gym_dialog_message">Nova gym</string>
+    <string name="new_gym_dialog_message">Cadastrar nova academia</string>
 </resources>

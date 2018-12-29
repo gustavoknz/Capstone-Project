@@ -8,10 +8,7 @@
         android:id="@+id/form_gym_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="4dp"
+        android:layout_margin="8dp"
         android:hint="Address"
         android:inputType="textPostalAddress" />
 
@@ -19,9 +16,18 @@
         android:id="@+id/form_gym_equipments_grid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="2"
+        android:layout_margin="8dp"
+        android:choiceMode="multipleChoice"
         android:clickable="true"
         android:focusable="true"
-        android:choiceMode="multipleChoice"
+        android:numColumns="2"
         app:layout_constraintTop_toBottomOf="@id/form_gym_address" />
+
+    <CheckBox
+        android:id="@+id/form_gym_pcd_able"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:text="Adequada para pessoas com deficiencia"
+        app:layout_constraintTop_toBottomOf="@id/form_gym_equipments_grid" />
 </android.support.constraint.ConstraintLayout>
