@@ -30,8 +30,9 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class NewGymDialogFragment extends DialogFragment {
+public class NewGymDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final String TAG = "NewGymDialogFragment";
     private DatabaseReference mDatabase;
     private MainCallback mMainCallback;
@@ -120,5 +121,18 @@ public class NewGymDialogFragment extends DialogFragment {
         });
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
         return builder.create();
+    }
+
+    @OnClick(R.id.map_balloon_camera)
+    public void onCameraCLicked(View view) {
+        Log.d(TAG, "Camera clicked!");
+    }
+
+    @Override
+    public void onClick(View view) {
+        Log.d(TAG, "Dialog clicked!");
+        if (view.getId() == R.id.map_balloon_camera) {
+            Log.d(TAG, "Camera clicked!");
+        }
     }
 }

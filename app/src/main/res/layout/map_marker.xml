@@ -11,8 +11,8 @@
         android:layout_height="wrap_content"
         android:contentDescription="This gym is accessible for disable people"
         android:src="@drawable/ic_accessible"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -80,4 +80,15 @@
         app:layout_constraintBottom_toBottomOf="@id/map_balloon_voted_thumb_up"
         app:layout_constraintStart_toEndOf="@id/map_balloon_voted_thumb_up"
         app:layout_constraintTop_toTopOf="@id/map_balloon_voted_thumb_up" />
+
+    <ImageView
+        android:contentDescription="Take a photo of the gym"
+        android:id="@+id/map_balloon_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_camera"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/map_balloon_voted_text" />
 </android.support.constraint.ConstraintLayout>

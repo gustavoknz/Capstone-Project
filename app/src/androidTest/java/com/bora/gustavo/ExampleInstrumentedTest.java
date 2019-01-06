@@ -40,7 +40,7 @@ public class ExampleInstrumentedTest {
 
     @Test
     public void testFabNewGymCancel() {
-        onView(withId(R.id.fab)).perform(click());
+        onView(withId(R.id.main_fab)).perform(click());
         onView(withText(R.string.new_gym_dialog_message)).check(matches(isDisplayed()));
         onView(withId(android.R.id.button2)).perform(click());
     }

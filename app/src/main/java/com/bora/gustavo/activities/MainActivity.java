@@ -58,7 +58,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
-        implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MainCallback {
+        implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
     private final static String TAG_GYM = "MainActivity_Gym";
     private static final float MAP_DEFAULT_ZOOM = 15f;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.fab)
+    @BindView(R.id.main_fab)
     FloatingActionButton mFab;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity
         mMap.addMarker(new MarkerOptions().position(latLng).title(gym.getAddress()));
     }
 
-    @OnClick(R.id.fab)
+    @OnClick(R.id.main_fab)
     public void onFabClicked(View view) {
         NewGymDialogFragment newGymFragment = new NewGymDialogFragment();
         newGymFragment.setCallback(this);
@@ -214,6 +214,7 @@ public class MainActivity extends AppCompatActivity
             LatLng latLng = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, MAP_DEFAULT_ZOOM));
         }
+        mMap.setOnInfoWindowClickListener(this);
         mMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
             @Override
             public View getInfoWindow(Marker arg0) {
@@ -240,6 +241,7 @@ public class MainActivity extends AppCompatActivity
                         ivPcdAble.setVisibility(View.GONE);
                     }
                 }
+                marker.setTag(gym);
                 return markerContentView;
             }
 
@@ -334,5 +336,12 @@ public class MainActivity extends AppCompatActivity
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Gym gym = (Gym) marker.getTag();
+        Log.d(TAG, "Marker's balloon clicked: " + gym);
+        startActivity(new Intent(getApplicationContext(), GymActivity.class));
     }
 }
