@@ -14,10 +14,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +50,7 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -55,6 +60,7 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
+    private final static String TAG_GYM = "MainActivity_Gym";
     private static final float MAP_DEFAULT_ZOOM = 15f;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private boolean mMapAnimated = false;
+    private List<Gym> mGymsList = new ArrayList<>();
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -145,11 +152,12 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Gym gym = postSnapshot.getValue(Gym.class);
-                    Log.d(TAG, "Got gym: " + gym);
+                    Log.d(TAG_GYM, "Got gym: " + gym);
                     if (gym == null) {
                         Log.e(TAG, "Got a gym == null in my database");
                     } else {
                         addGymToMap(gym);
+                        mGymsList.add(gym);
                     }
                 }
             }
@@ -215,8 +223,48 @@ public class MainActivity extends AppCompatActivity
             @Override
             public View getInfoContents(Marker marker) {
                 View markerContentView = getLayoutInflater().inflate(R.layout.map_marker, null);
-                //TextView tvTitle = ((TextView) myContentView.findViewById(R.id.title));
+                TextView tvAddress = markerContentView.findViewById(R.id.map_balloon_address);
+                TextView tvEquipments = markerContentView.findViewById(R.id.map_balloon_equipments);
+                ImageView ivPcdAble = markerContentView.findViewById(R.id.map_balloon_pcd_able);
+                LatLng latLng = marker.getPosition();
+                Log.d(TAG_GYM, "Clicked on map item: (" + latLng.latitude + ", " + latLng.longitude + ")");
+                Gym gym = lookForGym(latLng);
+                if (gym == null) {
+                    tvAddress.setText("Gym not found");
+                } else {
+                    tvAddress.setText(gym.getAddress());
+                    tvEquipments.setText(getFormattedStringForEquipments(gym.getEquipmentList().size()));
+                    if (gym.isPcdAble()) {
+                        ivPcdAble.setVisibility(View.VISIBLE);
+                    } else {
+                        ivPcdAble.setVisibility(View.GONE);
+                    }
+                }
                 return markerContentView;
+            }
+
+            private CharSequence getFormattedStringForEquipments(int numberOfEquipments) {
+                String text = getString(R.string.map_balloon_equipments);
+                String numberText = Integer.toString(numberOfEquipments);
+                SpannableStringBuilder equipmentsString = new SpannableStringBuilder();
+                int startBold = 0;
+                equipmentsString.append(numberText);
+                equipmentsString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
+                        startBold, equipmentsString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                equipmentsString.append(' ');
+                equipmentsString.append(text);
+                return equipmentsString;
+            }
+
+            private Gym lookForGym(LatLng latLng) {
+                for (Gym gym : mGymsList) {
+                    if (gym.getLatitude() == latLng.latitude && gym.getLongitude() == latLng.longitude) {
+                        return gym;
+                    }
+                }
+                Log.e(TAG_GYM, "Could not find gym with (" + latLng.latitude + ", " +
+                        latLng.longitude + ") between all gyms: " + mGymsList);
+                return null;
             }
         });
         Log.d(TAG, "I am done here");

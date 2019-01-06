@@ -9,4 +9,5 @@
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
     <string name="new_gym_dialog_message">Cadastrar nova academia</string>
+    <string name="map_balloon_equipments">equipments registered</string>
 </resources>
