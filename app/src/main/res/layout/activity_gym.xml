@@ -4,13 +4,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="16dp"
     tools:context=".activities.GymActivity">
+
+    <ImageView
+        android:id="@+id/gym_images_picture_taken"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:scaleType="center"
+        android:contentDescription="Just taken picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:listitem="@layout/gym_list_item" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/gym_images_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/gym_images_picture_taken"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/gym_list_item" />
 
@@ -18,7 +32,6 @@
         android:id="@+id/gym_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/main_fab_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_camera" />
