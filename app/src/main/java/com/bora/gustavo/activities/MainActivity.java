@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -58,7 +57,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
-        implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener, MainCallback {
+        implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback,
+        NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
     private final static String TAG_GYM = "MainActivity_Gym";
     private static final float MAP_DEFAULT_ZOOM = 15f;
@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout mDrawerLayout;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.main_fab)
-    FloatingActionButton mFab;
     @BindView(R.id.nav_view)
     NavigationView mNavigationView;
 
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.main_fab)
-    public void onFabClicked(View view) {
+    public void onMainFabClicked(View view) {
         NewGymDialogFragment newGymFragment = new NewGymDialogFragment();
         newGymFragment.setCallback(this);
         newGymFragment.show(getSupportFragmentManager(), TAG);

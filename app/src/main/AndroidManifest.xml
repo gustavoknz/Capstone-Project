@@ -46,6 +46,7 @@
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.ProfileActivity" />
         <activity android:name=".activities.GymActivity" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.bora.gustavo.fileprovider"

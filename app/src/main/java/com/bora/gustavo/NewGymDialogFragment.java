@@ -32,7 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NewGymDialogFragment extends DialogFragment implements View.OnClickListener {
+public class NewGymDialogFragment extends DialogFragment {
     private static final String TAG = "NewGymDialogFragment";
     private DatabaseReference mDatabase;
     private MainCallback mMainCallback;
@@ -124,15 +124,7 @@ public class NewGymDialogFragment extends DialogFragment implements View.OnClick
     }
 
     @OnClick(R.id.map_balloon_camera)
-    public void onCameraCLicked(View view) {
+    public void onCameraClicked() {
         Log.d(TAG, "Camera clicked!");
-    }
-
-    @Override
-    public void onClick(View view) {
-        Log.d(TAG, "Dialog clicked!");
-        if (view.getId() == R.id.map_balloon_camera) {
-            Log.d(TAG, "Camera clicked!");
-        }
     }
 }

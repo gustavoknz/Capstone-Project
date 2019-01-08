@@ -27,8 +27,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 public class GymActivity extends BackActivity implements GymImagesRecyclerViewAdapter.ItemClickListener {
     private static final int RECYCLER_VIEW_NUMBER_OF_COLUMNS = 3;
     private static final int REQUEST_TAKE_PHOTO = 1;
@@ -69,7 +67,7 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
     }
 
     @OnClick(R.id.gym_fab)
-    public void onCameraClicked(View view) {
+    public void onCameraClicked() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             // Create the File where the photo should go
@@ -93,14 +91,18 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-
-            Bundle extras = data.getExtras();
-            if (extras == null) {
-                Log.e(TAG, "Got extras = null");
+            if (data == null) {
+                Log.e(TAG, "Got data equal to null");
             } else {
-                Log.d(TAG, "Got extras: " + extras);
-                Bitmap imageBitmap = (Bitmap) extras.get("data");
-                mPictureTaken.setImageBitmap(imageBitmap);
+                Log.d(TAG, "Got data = " + data);
+                Bundle extras = data.getExtras();
+                if (extras == null) {
+                    Log.e(TAG, "Got extras equal to null");
+                } else {
+                    Log.d(TAG, "Got extras = " + extras);
+                    Bitmap imageBitmap = (Bitmap) extras.get("data");
+                    mPictureTaken.setImageBitmap(imageBitmap);
+                }
             }
         }
     }
@@ -113,7 +115,7 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
             boolean folderCreated = storageDir.createNewFile();
             Log.d(TAG, "folderCreated: " + folderCreated);
         }
-        File image = File.createTempFile(imageFileName,".jpg", storageDir);
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         mCurrentPhotoPath = image.getAbsolutePath();
         galleryAddPic();
         return image;
