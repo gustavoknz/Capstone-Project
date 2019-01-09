@@ -122,9 +122,4 @@ public class NewGymDialogFragment extends DialogFragment {
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
         return builder.create();
     }
-
-    @OnClick(R.id.map_balloon_camera)
-    public void onCameraClicked() {
-        Log.d(TAG, "Camera clicked!");
-    }
 }

@@ -28,8 +28,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 public class GymActivity extends BackActivity implements GymImagesRecyclerViewAdapter.ItemClickListener {
     private static final int RECYCLER_VIEW_NUMBER_OF_COLUMNS = 3;
     private static final String TAG = "GymActivity";
@@ -69,7 +67,7 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
                 + ", which is at cell position " + position);
     }
 
-    @OnClick(R.id.gym_fab)
+    @OnClick(R.id.gym_add_picture)
     public void onCameraClicked() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
