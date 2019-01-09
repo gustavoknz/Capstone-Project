@@ -11,7 +11,7 @@
         android:id="@+id/gym_images_picture_taken"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:scaleType="center"
+        android:scaleType="fitCenter"
         android:contentDescription="Just taken picture"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

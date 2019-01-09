@@ -3,14 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.bora.gustavo">
 
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -45,8 +44,9 @@
         <activity android:name=".activities.LoginActivity" />
         <activity android:name=".activities.ResetPasswordActivity" />
         <activity android:name=".activities.ProfileActivity" />
-        <activity android:name=".activities.GymActivity" />
-
+        <activity
+            android:name=".activities.GymActivity"
+            android:screenOrientation="portrait" />
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.bora.gustavo.fileprovider"

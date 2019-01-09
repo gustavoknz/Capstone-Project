@@ -1,6 +1,7 @@
 package com.bora.gustavo.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -94,77 +95,6 @@ public class MainActivity extends AppCompatActivity
 
         mDatabase = FirebaseDatabase.getInstance().getReference("gyms");
         mAuth = FirebaseAuth.getInstance();
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        Dexter.withActivity(this)
-                .withPermissions(
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        // check if all permissions are granted
-                        if (report.areAllPermissionsGranted()) {
-                            Log.d(TAG, "All permission are granted");
-                            try {
-                                mFusedLocationClient.getLastLocation()
-                                        .addOnSuccessListener(MainActivity.this, location -> {
-                                            // Got last known location. In some rare situations this can be null.
-                                            if (location == null) {
-                                                Toast.makeText(MainActivity.this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                LocationHolderSingleton locationHolder = LocationHolderSingleton.getInstance();
-                                                locationHolder.setLocation(location);
-                                                mLastLocation = location;
-                                                if (!mMapAnimated) {
-                                                    mMapAnimated = true;
-                                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), MAP_DEFAULT_ZOOM));
-                                                }
-                                            }
-                                        });
-                            } catch (SecurityException se) {
-                                Log.e(TAG, "Should never get here");
-                            }
-                        } else {
-                            Log.d(TAG, "Not all permissions were granted :|");
-                        }
-
-                        // check for permanent denial of any permission
-                        if (report.isAnyPermissionPermanentlyDenied()) {
-                            Log.d(TAG, "User permanently denied a permission :(");
-                        }
-                    }
-
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        Log.d(TAG, "Showing rationale...");
-                        token.continuePermissionRequest();
-                    }
-                })
-                .onSameThread()
-                .check();
-
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
-                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
-                    Gym gym = postSnapshot.getValue(Gym.class);
-                    Log.d(TAG_GYM, "Got gym: " + gym);
-                    if (gym == null) {
-                        Log.e(TAG, "Got a gym == null in my database");
-                    } else {
-                        addGymToMap(gym);
-                        mGymsList.add(gym);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e(TAG, "The read failed: " + databaseError.getCode());
-            }
-        });
         mAuth.addAuthStateListener(firebaseAuth -> {
             if (firebaseAuth.getCurrentUser() == null) {
                 //User has just signed out
@@ -188,7 +118,9 @@ public class MainActivity extends AppCompatActivity
 
     private void addGymToMap(Gym gym) {
         LatLng latLng = new LatLng(gym.getLatitude(), gym.getLongitude());
-        mMap.addMarker(new MarkerOptions().position(latLng).title(gym.getAddress()));
+        if (mMap != null) {
+            mMap.addMarker(new MarkerOptions().position(latLng).title(gym.getAddress()));
+        }
     }
 
     @OnClick(R.id.main_fab)
@@ -201,11 +133,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Log.d(TAG, "Map is ready!");
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        googleMap.setMyLocationEnabled(true);
         mMap = googleMap;
         if (mLastLocation != null && !mMapAnimated) {
             mMapAnimated = true;
@@ -267,7 +194,75 @@ public class MainActivity extends AppCompatActivity
                 return null;
             }
         });
-        Log.d(TAG, "I am done here");
+        Log.d(TAG, "I am done here. Now I am ready to fetch data and set location");
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        Dexter.withActivity(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new MultiplePermissionsListener() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport report) {
+                        // check if all permissions are granted
+                        if (report.areAllPermissionsGranted()) {
+                            Log.d(TAG, "All permission are granted");
+                            mMap.setMyLocationEnabled(true);
+                            mFusedLocationClient.getLastLocation()
+                                    .addOnSuccessListener(MainActivity.this, location -> {
+                                        // Got last known location. In some rare situations this can be null.
+                                        if (location == null) {
+                                            Toast.makeText(MainActivity.this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            LocationHolderSingleton locationHolder = LocationHolderSingleton.getInstance();
+                                            locationHolder.setLocation(location);
+                                            mLastLocation = location;
+                                            if (!mMapAnimated) {
+                                                if (mMap != null) {
+                                                    mMapAnimated = true;
+                                                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), MAP_DEFAULT_ZOOM));
+                                                }
+                                            }
+                                        }
+                                    });
+                        } else {
+                            Log.d(TAG, "Not all permissions were granted :|");
+                        }
+                        if (report.isAnyPermissionPermanentlyDenied()) {
+                            Log.d(TAG, "User permanently denied a permission :(");
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                        Log.d(TAG, "Showing rationale...");
+                        token.continuePermissionRequest();
+                    }
+                })
+                .onSameThread()
+                .check();
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
+                for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+                    Gym gym = postSnapshot.getValue(Gym.class);
+                    Log.d(TAG_GYM, "Got gym: " + gym);
+                    if (gym == null) {
+                        Log.e(TAG, "Got a gym == null in my database");
+                    } else {
+                        addGymToMap(gym);
+                        mGymsList.add(gym);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e(TAG, "The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
     @Override

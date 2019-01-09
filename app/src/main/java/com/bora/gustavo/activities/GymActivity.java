@@ -2,6 +2,7 @@ package com.bora.gustavo.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,15 +28,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 public class GymActivity extends BackActivity implements GymImagesRecyclerViewAdapter.ItemClickListener {
     private static final int RECYCLER_VIEW_NUMBER_OF_COLUMNS = 3;
-    private static final int REQUEST_TAKE_PHOTO = 1;
     private static final String TAG = "GymActivity";
     private GymImagesRecyclerViewAdapter mListImagesAdapter;
+    private static final int REQUEST_TAKE_PHOTO = 1;
     private String mCurrentPhotoPath;
 
     @BindView(R.id.gym_images_picture_taken)
-    ImageView mPictureTaken;
+    ImageView mImageView;
     @BindView(R.id.gym_images_recycler_view)
     RecyclerView mImagesRecyclerView;
 
@@ -70,40 +73,31 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
     public void onCameraClicked() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
             try {
-                photoFile = createImageFile();
-            } catch (IOException ioe) {
-                Log.e(TAG, "Error creating file", ioe);
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this,
                         "com.bora.gustavo.fileprovider",
-                        photoFile);
+                        createImageFile());
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+            } catch (IOException e) {
+                Log.e(TAG, "Error creating file for the picture", e);
             }
         }
+    }
+
+    private void setPic() {
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath);
+        mImageView.setImageBitmap(bitmap);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
-            if (data == null) {
-                Log.e(TAG, "Got data equal to null");
-            } else {
-                Log.d(TAG, "Got data = " + data);
-                Bundle extras = data.getExtras();
-                if (extras == null) {
-                    Log.e(TAG, "Got extras equal to null");
-                } else {
-                    Log.d(TAG, "Got extras = " + extras);
-                    Bitmap imageBitmap = (Bitmap) extras.get("data");
-                    mPictureTaken.setImageBitmap(imageBitmap);
-                }
-            }
+            Log.d(TAG, "OK, lets set the imageView");
+            setPic();
+            galleryAddPic();
+        } else {
+            Log.e(TAG, "ERROR :/");
         }
     }
 
@@ -111,20 +105,14 @@ public class GymActivity extends BackActivity implements GymImagesRecyclerViewAd
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (storageDir != null && !storageDir.exists()) {
-            boolean folderCreated = storageDir.createNewFile();
-            Log.d(TAG, "folderCreated: " + folderCreated);
-        }
         File image = File.createTempFile(imageFileName, ".jpg", storageDir);
         mCurrentPhotoPath = image.getAbsolutePath();
-        galleryAddPic();
         return image;
     }
 
     private void galleryAddPic() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-        File f = new File(mCurrentPhotoPath);
-        Uri contentUri = Uri.fromFile(f);
+        Uri contentUri = Uri.fromFile(new File(mCurrentPhotoPath));
         mediaScanIntent.setData(contentUri);
         this.sendBroadcast(mediaScanIntent);
     }
