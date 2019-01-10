@@ -1,22 +1,20 @@
 package com.bora.gustavo.activities.adapters;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bora.gustavo.R;
 
 public class GymImagesRecyclerViewAdapter extends RecyclerView.Adapter<GymImagesRecyclerViewAdapter.ViewHolder> {
-    private Drawable[] mData;
+    private String[] mData;
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
 
-    public GymImagesRecyclerViewAdapter(Context context, Drawable[] data) {
+    public GymImagesRecyclerViewAdapter(Context context, String[] data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }
@@ -30,7 +28,7 @@ public class GymImagesRecyclerViewAdapter extends RecyclerView.Adapter<GymImages
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.anImageView.setImageDrawable(mData[position]);
+        holder.equipmentTextView.setText(mData[position]);
     }
 
     @Override
@@ -38,31 +36,17 @@ public class GymImagesRecyclerViewAdapter extends RecyclerView.Adapter<GymImages
         return mData.length;
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView anImageView;
+    class ViewHolder extends RecyclerView.ViewHolder {
+        TextView equipmentTextView;
 
         ViewHolder(View itemView) {
             super(itemView);
-            anImageView = itemView.findViewById(R.id.gym_item_image);
-            itemView.setOnClickListener(this);
-        }
-
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            equipmentTextView = itemView.findViewById(R.id.gym_item_equipment);
         }
     }
 
-    public Drawable getItem(int id) {
+    public String getItem(int id) {
         return mData[id];
-    }
-
-    public void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
-
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
     }
 }
 

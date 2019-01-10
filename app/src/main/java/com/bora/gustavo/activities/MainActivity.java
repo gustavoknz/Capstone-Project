@@ -28,7 +28,9 @@ import android.widget.Toast;
 import com.bora.gustavo.NewGymDialogFragment;
 import com.bora.gustavo.R;
 import com.bora.gustavo.helper.LocationHolderSingleton;
+import com.bora.gustavo.helper.Utils;
 import com.bora.gustavo.models.Gym;
+import com.bora.gustavo.models.GymParcelable;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -334,7 +336,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         Gym gym = (Gym) marker.getTag();
-        Log.d(TAG, "Marker's balloon clicked: " + gym);
-        startActivity(new Intent(getApplicationContext(), GymActivity.class));
+        if (gym == null) {
+            Log.e(TAG, "Got gym = null. Weird");
+        } else {
+            GymParcelable gymParcelable = new GymParcelable(gym);
+            Log.d(TAG, "Marker's balloon clicked: " + gym);
+            Intent intent = new Intent(getApplicationContext(), GymActivity.class);
+            intent.putExtra(Utils.PARAM_GYM, gymParcelable);
+            startActivity(intent);
+        }
     }
 }

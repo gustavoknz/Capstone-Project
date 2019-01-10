@@ -1,38 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    tools:context=".activities.GymActivity">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/gym_images_picture_taken"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:contentDescription="Just taken picture"
-        android:scaleType="fitCenter"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/gym_list_item" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/gym_images_recycler_view"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/gym_images_picture_taken"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/gym_list_item" />
+        android:layout_margin="16dp"
+        tools:context=".activities.GymActivity">
 
-    <TextView
-        android:id="@+id/gym_add_picture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add image"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        <ImageView
+            android:id="@+id/gym_favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_favorite_not"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/gym_address_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gym location:"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/gym_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="10dp"
+            android:text="Rua dos Blash, 12038"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gym_address_title" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gym_recycler_view_equipments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gym_address"
+            tools:listitem="@layout/gym_list_item" />
+
+        <ImageView
+            android:id="@+id/gym_image_accessible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_accessible"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/gym_recycler_view_equipments" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_accessible"
+            android:text="This gym may not be accessible for disable people"
+            android:paddingEnd="36dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/gym_image_accessible"
+            app:layout_constraintTop_toTopOf="@id/gym_image_accessible"
+            app:layout_constraintBottom_toBottomOf="@id/gym_image_accessible" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_accessible"
+            android:text="This gym may not be accessible for disable people"
+            android:visibility="invisible"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toEndOf="@id/gym_image_accessible"
+            app:layout_constraintTop_toBottomOf="@id/gym_image_accessible" />
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
