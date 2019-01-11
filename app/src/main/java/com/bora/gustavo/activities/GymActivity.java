@@ -53,7 +53,7 @@ public class GymActivity extends BackActivity {
         mRecyclerViewEquipments.setAdapter(adapter);
 
         setFavoriteImage();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference("votes");
     }
 
     @OnClick(R.id.gym_favorite)

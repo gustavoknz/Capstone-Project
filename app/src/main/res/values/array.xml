@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="equipments_list">
-        <item>Gira ombro</item>
-        <item>Agachamento</item>
-        <item>Caminhada</item>
-        <item>Rosca direta</item>
-        <item>Leg press</item>
-        <item>Levamento de peso</item>
-        <item>Bíceps</item>
+        <item>Roda de ombro</item>
+        <item>Máquina de tríceps</item>
+        <item>Torre de bicicleta</item>
+        <item>Máquina de bíceps</item>
+        <item>Simulador de caminhada</item>
+        <item>Barra alta</item>
+        <item>Máquina de remada</item>
     </string-array>
 </resources>
