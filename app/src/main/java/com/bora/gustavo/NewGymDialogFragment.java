@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.bora.gustavo.activities.MainCallback;
 import com.bora.gustavo.helper.LocationHolderSingleton;
+import com.bora.gustavo.helper.Utils;
 import com.bora.gustavo.models.Equipment;
 import com.bora.gustavo.models.Gym;
 import com.google.firebase.database.DatabaseReference;
@@ -96,6 +97,7 @@ public class NewGymDialogFragment extends DialogFragment {
             }
             LocationHolderSingleton locationSingleton = LocationHolderSingleton.getInstance();
             Gym newGym = new Gym();
+            newGym.setId(Utils.createUuid());
             if (locationSingleton != null && locationSingleton.getLocation() != null) {
                 newGym.setLatitude(locationSingleton.getLocation().getLatitude());
                 newGym.setLongitude(locationSingleton.getLocation().getLongitude());

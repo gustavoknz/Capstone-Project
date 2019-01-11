@@ -1,11 +1,10 @@
 package com.bora.gustavo.models;
 
-import android.support.annotation.NonNull;
-
 import java.util.Date;
 import java.util.List;
 
 public class Gym {
+    private String id;
     private double latitude;
     private double longitude;
     private int votesUp;
@@ -18,11 +17,23 @@ public class Gym {
     public Gym() {
     }
 
-    @NonNull
+    public Gym(String id, double latitude, double longitude, int votesUp, int votesDown, String address, Date registeredAt, boolean pcdAble, List<Equipment> equipmentList) {
+        this.id = id;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.votesUp = votesUp;
+        this.votesDown = votesDown;
+        this.address = address;
+        this.registeredAt = registeredAt;
+        this.pcdAble = pcdAble;
+        this.equipmentList = equipmentList;
+    }
+
     @Override
     public String toString() {
         return "Gym{" +
-                "latitude=" + latitude +
+                "id='" + id + '\'' +
+                ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", votesUp=" + votesUp +
                 ", votesDown=" + votesDown +
@@ -31,6 +42,14 @@ public class Gym {
                 ", pcdAble=" + pcdAble +
                 ", equipmentList=" + equipmentList +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getLatitude() {

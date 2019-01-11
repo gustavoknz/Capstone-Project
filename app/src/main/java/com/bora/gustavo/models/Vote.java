@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 
 public class Vote {
-    private int userId;
-    private int gymId;
+    private String userId;
+    private String gymId;
     private boolean up;
     private Date date;
 
@@ -24,19 +24,19 @@ public class Vote {
                 '}';
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public int getGymId() {
+    public String getGymId() {
         return gymId;
     }
 
-    public void setGymId(int gymId) {
+    public void setGymId(String gymId) {
         this.gymId = gymId;
     }
 

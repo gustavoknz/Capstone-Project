@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public class GymParcelable implements Parcelable {
+    private String id;
     private double latitude;
     private double longitude;
     private int votesUp;
@@ -19,6 +20,7 @@ public class GymParcelable implements Parcelable {
     private List<EquipmentParcelable> equipmentList;
 
     protected GymParcelable(Parcel in) {
+        id = in.readString();
         latitude = in.readDouble();
         longitude = in.readDouble();
         votesUp = in.readInt();
@@ -36,6 +38,7 @@ public class GymParcelable implements Parcelable {
     }
 
     public GymParcelable(Gym gym) {
+        this.id = gym.getId();
         this.latitude = gym.getLatitude();
         this.longitude = gym.getLongitude();
         this.votesUp = gym.getVotesUp();
@@ -60,6 +63,7 @@ public class GymParcelable implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
         dest.writeInt(votesUp);
@@ -91,8 +95,9 @@ public class GymParcelable implements Parcelable {
     @NonNull
     @Override
     public String toString() {
-        return "GymParcelable{" +
-                "latitude=" + latitude +
+        return "Gym{" +
+                "id='" + id + '\'' +
+                ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", votesUp=" + votesUp +
                 ", votesDown=" + votesDown +
@@ -101,6 +106,14 @@ public class GymParcelable implements Parcelable {
                 ", pcdAble=" + pcdAble +
                 ", equipmentList=" + equipmentList +
                 '}';
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public double getLatitude() {
