@@ -3,12 +3,10 @@ package com.bora.gustavo.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -153,7 +150,7 @@ public class MainActivity extends AppCompatActivity
                 View markerContentView = getLayoutInflater().inflate(R.layout.map_marker, null);
                 TextView tvAddress = markerContentView.findViewById(R.id.map_balloon_address);
                 TextView tvEquipments = markerContentView.findViewById(R.id.map_balloon_equipments);
-                ImageView ivPcdAble = markerContentView.findViewById(R.id.map_balloon_pcd_able);
+
                 LatLng latLng = marker.getPosition();
                 Log.d(TAG_GYM, "Clicked on map item: (" + latLng.latitude + ", " + latLng.longitude + ")");
                 Gym gym = lookForGym(latLng);
@@ -162,13 +159,9 @@ public class MainActivity extends AppCompatActivity
                 } else {
                     tvAddress.setText(gym.getAddress());
                     tvEquipments.setText(getFormattedStringForEquipments(gym.getEquipmentList().size()));
-                    if (gym.isPcdAble()) {
-                        ivPcdAble.setVisibility(View.VISIBLE);
-                    } else {
-                        ivPcdAble.setVisibility(View.GONE);
-                    }
                 }
                 marker.setTag(gym);
+                Log.d(TAG, "All set to show the marker");
                 return markerContentView;
             }
 
