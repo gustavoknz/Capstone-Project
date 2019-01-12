@@ -51,7 +51,7 @@
             tools:listitem="@layout/gym_list_item" />
 
         <ImageView
-            android:id="@+id/gym_image_accessible"
+            android:id="@+id/gym_accessible_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -61,15 +61,16 @@
             app:layout_constraintTop_toBottomOf="@id/gym_recycler_view_equipments" />
 
         <TextView
+            android:id="@+id/gym_accessible_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_accessible"
-            android:text="This gym may not be accessible for disable people"
             android:paddingEnd="36dp"
+            android:paddingStart="0dp"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/gym_image_accessible"
-            app:layout_constraintTop_toTopOf="@id/gym_image_accessible"
-            app:layout_constraintBottom_toBottomOf="@id/gym_image_accessible" />
+            app:layout_constraintStart_toEndOf="@id/gym_accessible_image"
+            app:layout_constraintTop_toTopOf="@id/gym_accessible_image"
+            app:layout_constraintBottom_toBottomOf="@id/gym_accessible_image" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -79,7 +80,7 @@
             android:text="This gym may not be accessible for disable people"
             android:visibility="invisible"
             android:layout_marginStart="10dp"
-            app:layout_constraintStart_toEndOf="@id/gym_image_accessible"
-            app:layout_constraintTop_toBottomOf="@id/gym_image_accessible" />
+            app:layout_constraintStart_toEndOf="@id/gym_accessible_image"
+            app:layout_constraintTop_toBottomOf="@id/gym_accessible_image" />
     </android.support.constraint.ConstraintLayout>
 </ScrollView>

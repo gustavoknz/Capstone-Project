@@ -10,4 +10,6 @@
     <string name="cancel">Cancelar</string>
     <string name="new_gym_dialog_message">Cadastrar nova academia</string>
     <string name="map_balloon_equipments">equipments registered</string>
+    <string name="gym_accessible_no">This gym may NOT be accessible for disable people</string>
+    <string name="gym_accessible_yes">This gym is accessible for disable people</string>
 </resources>
