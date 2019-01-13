@@ -124,6 +124,10 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.main_fab)
     public void onMainFabClicked(View view) {
+        if (Utils.getUserUid() == null) {
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_loged);
+            return;
+        }
         NewGymDialogFragment newGymFragment = new NewGymDialogFragment();
         newGymFragment.setCallback(this);
         newGymFragment.show(getSupportFragmentManager(), TAG);

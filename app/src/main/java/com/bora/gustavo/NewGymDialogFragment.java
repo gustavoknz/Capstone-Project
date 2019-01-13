@@ -2,6 +2,7 @@ package com.bora.gustavo;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -77,51 +79,69 @@ public class NewGymDialogFragment extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setMessage(R.string.new_gym_dialog_message);
-        builder.setPositiveButton(R.string.save, (dialog, id) -> {
-            Log.d(TAG, "User tapped save on the dialog");
-            String address = mAddressView.getText().toString().trim();
-            if (TextUtils.isEmpty(address)) {
-                Toast.makeText(getContext(), "Preencha o endereço aproximado", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            SparseBooleanArray checked = mEquipmentsListGrid.getCheckedItemPositions();
-            List<Equipment> equipmentList = new ArrayList<>(checked.size());
-            for (int i = 0; i < arrayAdapter.getCount(); i++) {
-                if (checked.get(i)) {
-                    equipmentList.add(new Equipment(i, arrayAdapter.getItem(i)));
-                }
-            }
-            if (equipmentList.isEmpty()) {
-                Toast.makeText(getContext(), "Selecione ao menos um aparelho presente na academia", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            LocationHolderSingleton locationSingleton = LocationHolderSingleton.getInstance();
-            Gym newGym = new Gym();
-            newGym.setId(Utils.createUuid());
-            if (locationSingleton != null && locationSingleton.getLocation() != null) {
-                newGym.setLatitude(locationSingleton.getLocation().getLatitude());
-                newGym.setLongitude(locationSingleton.getLocation().getLongitude());
-            } else {
-                newGym.setLatitude(0f);
-                newGym.setLongitude(0f);
-            }
-            newGym.setVotesDown(0);
-            newGym.setVotesUp(0);
-            newGym.setAddress(mAddressView.getText().toString());
-            newGym.setRegisteredAt(new Date());
-            newGym.setPcdAble(mPcdAble.isChecked());
-            newGym.setEquipmentList(equipmentList);
-            mDatabase.child(gymKey).setValue(newGym, (firebaseError, ref) -> {
-                if (firebaseError != null) {
-                    Log.e(TAG, "New gym could not be saved: " + firebaseError.getMessage());
-                } else {
-                    Log.d(TAG, "New gym saved successfully.");
-                    mMainCallback.onNewGymAdded(newGym);
-                }
-            });
-            Log.d(TAG, "Adding a new gym: " + newGym);
-        });
+        builder.setPositiveButton(R.string.save, null);
         builder.setNegativeButton(R.string.cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
-        return builder.create();
+        Dialog dialog = builder.create();
+        dialog.setOnShowListener(dialogInterface -> {
+            Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            button.setOnClickListener(view -> {
+                Log.d(TAG, "User tapped save on the dialog");
+                String address = mAddressView.getText().toString().trim();
+                if (TextUtils.isEmpty(address)) {
+                    Toast.makeText(getContext(), "Preencha o endereço aproximado", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                SparseBooleanArray checked = mEquipmentsListGrid.getCheckedItemPositions();
+                List<Equipment> equipmentList = new ArrayList<>(checked.size());
+                for (int i = 0; i < arrayAdapter.getCount(); i++) {
+                    if (checked.get(i)) {
+                        equipmentList.add(new Equipment(i, arrayAdapter.getItem(i)));
+                    }
+                }
+                if (equipmentList.isEmpty()) {
+                    Toast.makeText(getContext(), "Selecione ao menos um aparelho presente na academia", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                LocationHolderSingleton locationSingleton = LocationHolderSingleton.getInstance();
+                Gym newGym = new Gym();
+                newGym.setId(Utils.createUuid());
+                if (locationSingleton != null && locationSingleton.getLocation() != null) {
+                    newGym.setLatitude(locationSingleton.getLocation().getLatitude());
+                    newGym.setLongitude(locationSingleton.getLocation().getLongitude());
+                } else {
+                    newGym.setLatitude(0f);
+                    newGym.setLongitude(0f);
+                }
+                newGym.setVotesDown(0);
+                newGym.setVotesUp(0);
+                newGym.setAddress(mAddressView.getText().toString());
+                String userId = Utils.getUserUid();
+                if (userId == null) {
+                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_loged);
+                    dialog.dismiss();
+                }
+                newGym.setUserId(userId);
+                newGym.setRegisteredAt(new Date());
+                newGym.setPcdAble(mPcdAble.isChecked());
+                newGym.setEquipmentList(equipmentList);
+
+                if (gymKey == null) {
+                    Log.wtf(TAG, "Gym key = null. Weird.");
+                    Toast.makeText(getActivity().getApplicationContext(), "Could not reach server. Please try again later", Toast.LENGTH_SHORT).show();
+                } else {
+                    mDatabase.child(gymKey).setValue(newGym, (firebaseError, ref) -> {
+                        if (firebaseError != null) {
+                            Log.e(TAG, "New gym could not be saved: " + firebaseError.getMessage());
+                        } else {
+                            Log.d(TAG, "New gym saved successfully.");
+                            mMainCallback.onNewGymAdded(newGym);
+                        }
+                    });
+                }
+                Log.d(TAG, "Adding a new gym: " + newGym);
+                dialog.dismiss();
+            });
+        });
+        return dialog;
     }
 }

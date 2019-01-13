@@ -10,6 +10,7 @@ public class Gym {
     private int votesUp;
     private int votesDown;
     private String address;
+    private String userId;
     private Date registeredAt;
     private boolean pcdAble;
     private List<Equipment> equipmentList;
@@ -17,13 +18,14 @@ public class Gym {
     public Gym() {
     }
 
-    public Gym(String id, double latitude, double longitude, int votesUp, int votesDown, String address, Date registeredAt, boolean pcdAble, List<Equipment> equipmentList) {
+    public Gym(String id, double latitude, double longitude, int votesUp, int votesDown, String address, String userId, Date registeredAt, boolean pcdAble, List<Equipment> equipmentList) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
         this.votesUp = votesUp;
         this.votesDown = votesDown;
         this.address = address;
+        this.userId = userId;
         this.registeredAt = registeredAt;
         this.pcdAble = pcdAble;
         this.equipmentList = equipmentList;
@@ -38,6 +40,7 @@ public class Gym {
                 ", votesUp=" + votesUp +
                 ", votesDown=" + votesDown +
                 ", address='" + address + '\'' +
+                ", userId='" + userId + '\'' +
                 ", registeredAt=" + registeredAt +
                 ", pcdAble=" + pcdAble +
                 ", equipmentList=" + equipmentList +
@@ -90,6 +93,14 @@ public class Gym {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public Date getRegisteredAt() {
