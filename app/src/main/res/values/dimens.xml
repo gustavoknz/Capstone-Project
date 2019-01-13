@@ -4,4 +4,13 @@
     <dimen name="nav_header_vertical_spacing">16dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="main_fab_margin">16dp</dimen>
+    <dimen name="gym_address_title_font_size">12sp</dimen>
+    <dimen name="gym_address_font_size">14sp</dimen>
+    <dimen name="login_button_sign_up_font_size">15sp</dimen>
+    <dimen name="reset_password_forgot_font_size">20sp</dimen>
+    <dimen name="reset_password_message_font_size">14sp</dimen>
+    <dimen name="sign_up_login_button_font_size">15sp</dimen>
+    <dimen name="appwidget_text_font_size">18sp</dimen>
+    <dimen name="gym_item_equipment_font_size">14sp</dimen>
+    <dimen name="map_balloon_address_font_size">15sp</dimen>
 </resources>

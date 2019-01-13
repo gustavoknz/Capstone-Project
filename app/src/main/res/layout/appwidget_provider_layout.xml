@@ -13,5 +13,5 @@
         android:gravity="center"
         android:padding="8dp"
         android:textColor="#FAFAFA"
-        android:textSize="18sp" />
+        android:textSize="@dimen/appwidget_text_font_size" />
 </RelativeLayout>

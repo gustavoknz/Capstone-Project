@@ -24,7 +24,7 @@ public class LoginActivity extends BackActivity {
     @BindView(R.id.login_progress_bar)
     ProgressBar mProgressBar;
 
-    @OnClick(R.id.login_button_signup)
+    @OnClick(R.id.login_button_sign_up)
     public void signUpCLicked(View view) {
         startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
     }
