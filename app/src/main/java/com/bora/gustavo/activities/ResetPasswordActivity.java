@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.bora.gustavo.R;
+import com.bora.gustavo.helper.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
@@ -26,7 +27,6 @@ public class ResetPasswordActivity extends BackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
         ButterKnife.bind(this);
-
         mAuth = FirebaseAuth.getInstance();
     }
 
@@ -39,16 +39,16 @@ public class ResetPasswordActivity extends BackActivity {
     public void onResetClicked(View view) {
         String email = mInputEmail.getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplication(), "Enter your registered email id", Toast.LENGTH_SHORT).show();
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.reset_password_no_email);
             return;
         }
         mProgressBar.setVisibility(View.VISIBLE);
         mAuth.sendPasswordResetEmail(email)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(ResetPasswordActivity.this, "We have sent you instructions to reset your password", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResetPasswordActivity.this, R.string.reset_password_sent_ok, Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(ResetPasswordActivity.this, "Failed to send reset email", Toast.LENGTH_SHORT).show();
+                        Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.reset_password_sent_fail);
                     }
                     mProgressBar.setVisibility(View.GONE);
                 });

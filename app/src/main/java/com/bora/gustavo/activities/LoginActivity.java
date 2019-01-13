@@ -6,9 +6,9 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.bora.gustavo.R;
+import com.bora.gustavo.helper.Utils;
 import com.google.firebase.auth.FirebaseAuth;
 
 import butterknife.BindView;
@@ -36,35 +36,25 @@ public class LoginActivity extends BackActivity {
 
     @OnClick(R.id.login_button)
     public void loginCLicked(View view) {
-        String email = mInputEmail.getText().toString();
-        final String password = mInputPassword.getText().toString();
+        String email = mInputEmail.getText().toString().trim();
+        String password = mInputPassword.getText().toString().trim();
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.login_fail_email);
             return;
         }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(password) || password.length() < 6 || password.length() > 14) {
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.login_fail_password);
             return;
         }
         mProgressBar.setVisibility(View.VISIBLE);
-
-        //authenticate user
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, task -> {
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the mAuth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
                     mProgressBar.setVisibility(View.GONE);
                     if (task.isSuccessful()) {
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         finish();
                     } else {
-                        // there was an error
-                        if (password.length() < 6) {
-                            mInputPassword.setError("A senha deve ter entre 6 e 14 caracteres");
-                        } else {
-                            Toast.makeText(LoginActivity.this, "Falha no login", Toast.LENGTH_LONG).show();
-                        }
+                        Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.login_fail);
                     }
                 });
     }
@@ -74,8 +64,6 @@ public class LoginActivity extends BackActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
-        //Get Firebase mAuth instance
         mAuth = FirebaseAuth.getInstance();
     }
 }

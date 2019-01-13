@@ -1,19 +1,58 @@
 <resources>
-    <string name="app_name">Bora Malhar!</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_image_desc">Navigation header</string>
+    <string name="app_name" translatable="false">Bora Malhar!</string>
+    <string name="snackbar_close">CLOSE</string>
+    <string name="main_location_not_found">Could not retrieve location</string>
+
+    <string name="map_marker_liked">Liked by %d people</string>
+    <string name="map_marker_equipments">equipments registered</string>
+    <string name="map_marker_gym_not_found">Gym not found</string>
+
+    <string name="navigation_login">Login</string>
+    <string name="navigation_logout">Logout</string>
+    <string name="navigation_open">Open navigation drawer</string>
+    <string name="navigation_close">Close navigation drawer</string>
+    <string name="navigation_header_image_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
-    <string name="save">Salvar</string>
-    <string name="cancel">Cancelar</string>
-    <string name="new_gym_dialog_message">Cadastrar nova academia</string>
-    <string name="map_balloon_equipments">equipments registered</string>
+
+    <string name="gym_location">Gym location:</string>
+    <string name="gym_favorite">Favorite</string>
     <string name="gym_accessible_no">This gym may NOT be accessible for disable people</string>
     <string name="gym_accessible_yes">This gym is accessible for disable people</string>
-    <string name="map_marker_liked">Liked by %d people</string>
+    <string name="gym_accessibility">Gym accessibility</string>
 
     <string name="appwidget_text">There are %d gym registered</string>
     <string name="appwidget_text_empty">Could not fetch data</string>
-    <string name="new_gym_not_loged">Please login first</string>
-    <string name="snackbar_close">CLOSE</string>
+
+    <string name="new_gym_dialog_message">Register a new gym</string>
+    <string name="new_gym_dialog_save">Save</string>
+    <string name="new_gym_dialog_cancel">Cancel</string>
+    <string name="new_gym_not_logged">Please login first</string>
+    <string name="new_gym_fail_address">Fill the approximated address</string>
+    <string name="new_gym_fail_equipment">Select at least one equipment</string>
+    <string name="new_gym_key_null">Could not reach server. Please try again later</string>
+
+    <string name="reset_password_sent_ok">We have sent you instructions to reset your password</string>
+    <string name="reset_password_sent_fail">Failed to send reset email</string>
+    <string name="reset_password_no_email">Enter your registered email id</string>
+
+    <string name="sign_up_fail_name">Enter your name</string>
+    <string name="sign_up_fail_address">Enter a valid email address</string>
+    <string name="sign_up_fail_password">The password must be between 6 and 14 characters length</string>
+
+    <string name="login_fail_email">Enter a valid email address</string>
+    <string name="login_fail_password">The password must be between 6 and 14 characters length</string>
+    <string name="login_fail">Login failed</string>
+    <string name="login_email">Email</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">Login</string>
+    <string name="login_forgot_password">Forgot password</string>
+    <string name="login_register">Register</string>
+
+    <string name="reset_password_forgot">Forgot the password?</string>
+    <string name="reset_password_hint_email">Email</string>
+    <string name="reset_password_reset">Password reset</string>
+    <string name="reset_password_back">Back</string>
+    <string name="reset_password_image">App icon</string>
+    <string name="reset_password_message">We need only the email you used when signed up to send you the instructions to reset the password.</string>
+    <string name="reset_password_message2">Precisamos somente do e-mail que voce usou no cadastro para lhe enviar as instrucoes para resetar a senha.</string>
 </resources>

@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.bora.gustavo.R;
 import com.bora.gustavo.helper.LocationHolderSingleton;
@@ -63,33 +62,23 @@ public class SignUpActivity extends BackActivity {
         String name = mInputName.getText().toString().trim();
         String email = mInputEmail.getText().toString().trim();
         String password = mInputPassword.getText().toString().trim();
-
         if (TextUtils.isEmpty(name)) {
-            Toast.makeText(getApplicationContext(), "Enter your name!", Toast.LENGTH_SHORT).show();
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.sign_up_fail_name);
             return;
         }
         if (TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Enter email address!", Toast.LENGTH_SHORT).show();
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.sign_up_fail_address);
             return;
         }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Enter password!", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(password) || password.length() < 6 || password.length() > 14) {
+            mInputPassword.setError(getText(R.string.sign_up_fail_password));
             return;
         }
-        if (password.length() < 6) {
-            Toast.makeText(getApplicationContext(), "Password too short, enter minimum 6 characters!", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         mProgressBar.setVisibility(View.VISIBLE);
-        //create user
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(SignUpActivity.this, task -> {
                     Log.d(TAG, "onComplete createUserWithEmail: " + task.isSuccessful());
                     mProgressBar.setVisibility(View.GONE);
-                    // If sign in fails, display a message to the user. If sign in succeeds
-                    // the auth state listener will be notified and logic to handle the
-                    // signed in user can be handled in the listener.
                     if (task.isSuccessful()) {
                         Log.d(TAG, "Login successfully done");
                         addUserToMyTable();
@@ -108,6 +97,10 @@ public class SignUpActivity extends BackActivity {
             Log.w(TAG, "User id is = " + userId);
             String userKey = mDatabase.push().getKey();
             Log.w(TAG, "User key is = " + userKey);
+            if (userKey == null) {
+                Log.d(TAG, "Could not add user to my database");
+                return;
+            }
             User newUser = new User();
             newUser.setName(mInputName.getText().toString());
             newUser.setJoinedAt(new Date());
@@ -118,25 +111,6 @@ public class SignUpActivity extends BackActivity {
             newUser.setLastLatitude(locationHolder.getLocation().getLatitude());
             newUser.setLastLongitude(locationHolder.getLocation().getLongitude());
             mDatabase.child(userKey).setValue(newUser);
-            /*mDatabase.child("users").child(userId).addListenerForSingleValueEvent(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            User user = dataSnapshot.getValue(User.class);
-                            if (user == null) {
-                                Log.e(TAG, "User " + userId + " is unexpectedly null");
-                                Toast.makeText(SignUpActivity.this,
-                                        "Error: could not fetch user.",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            finish();
-                        }
-
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.w(TAG, "getUser:onCancelled", databaseError.toException());
-                        }
-                    });*/
         }
     }
 

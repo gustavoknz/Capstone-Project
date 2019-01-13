@@ -16,7 +16,7 @@
         android:layout_width="92dp"
         android:layout_height="92dp"
         android:layout_marginTop="@dimen/nav_header_vertical_spacing"
-        android:contentDescription="@string/nav_header_image_desc"
+        android:contentDescription="@string/navigation_header_image_desc"
         android:src="@drawable/ic_exercise" />
 
     <TextView

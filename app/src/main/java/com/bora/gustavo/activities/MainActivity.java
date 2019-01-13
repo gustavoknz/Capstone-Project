@@ -94,25 +94,26 @@ public class MainActivity extends AppCompatActivity
         mDatabase = FirebaseDatabase.getInstance().getReference("gyms");
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(firebaseAuth -> {
-            boolean logged = firebaseAuth.getCurrentUser() != null;
-            Log.d(TAG, "User has signed " + (logged ? "in" : "out"));
-            setLogoutVisibility(logged);
+            boolean loggedOut = firebaseAuth.getCurrentUser() == null;
+            Log.d(TAG, "User has logged " + (!loggedOut ? "in" : "out"));
+            setLoginVisibility(loggedOut);
         });
-        setLogoutVisibility(mAuth.getCurrentUser() != null);
+        setLoginVisibility(mAuth.getCurrentUser() == null);
 
         setSupportActionBar(mToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, mDrawerLayout, mToolbar, R.string.navigation_open, R.string.navigation_close);
         mDrawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
     }
 
-    private void setLogoutVisibility(boolean visible) {
+    private void setLoginVisibility(boolean visible) {
         Menu navigationViewMenu = mNavigationView.getMenu();
-        Log.d(TAG, "Showing logout view? " + visible);
-        navigationViewMenu.findItem(R.id.nav_logout).setVisible(visible);
+        Log.d(TAG, "Showing login view? " + visible);
+        navigationViewMenu.findItem(R.id.nav_login).setVisible(visible);
+        navigationViewMenu.findItem(R.id.nav_logout).setVisible(!visible);
     }
 
     private void addGymToMap(Gym gym) {
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.main_fab)
     public void onMainFabClicked(View view) {
         if (Utils.getUserUid() == null) {
-            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_loged);
+            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_logged);
             return;
         }
         NewGymDialogFragment newGymFragment = new NewGymDialogFragment();
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "Clicked on map item: (" + latLng.latitude + ", " + latLng.longitude + ")");
                 Gym gym = lookForGym(latLng);
                 if (gym == null) {
-                    tvAddress.setText("Gym not found");
+                    tvAddress.setText(R.string.map_marker_gym_not_found);
                 } else {
                     tvAddress.setText(gym.getAddress());
                     tvEquipments.setText(getFormattedStringForEquipments(gym.getEquipmentList().size()));
@@ -170,7 +171,7 @@ public class MainActivity extends AppCompatActivity
             }
 
             private CharSequence getFormattedStringForEquipments(int numberOfEquipments) {
-                String text = getString(R.string.map_balloon_equipments);
+                String text = getString(R.string.map_marker_equipments);
                 String numberText = Integer.toString(numberOfEquipments);
                 SpannableStringBuilder equipmentsString = new SpannableStringBuilder();
                 int startBold = 0;
@@ -212,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                                     .addOnSuccessListener(MainActivity.this, location -> {
                                         // Got last known location. In some rare situations this can be null.
                                         if (location == null) {
-                                            Toast.makeText(MainActivity.this, "Could not retrieve location", Toast.LENGTH_SHORT).show();
+                                            Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.main_location_not_found);
                                         } else {
                                             LocationHolderSingleton locationHolder = LocationHolderSingleton.getInstance();
                                             locationHolder.setLocation(location);
@@ -281,41 +282,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_profile) {
-            Log.d(TAG, "Profile clicked");
+        if (id == R.id.nav_login) {
+            Log.d(TAG, "Login clicked");
             if (mAuth.getCurrentUser() == null) {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
             } else {
                 Log.d(TAG, "I know you!");
-                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
         } else if (id == R.id.nav_logout) {
             Log.d(TAG, "Logout clicked");

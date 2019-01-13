@@ -57,7 +57,6 @@ public class GymActivity extends BackActivity {
         for (EquipmentParcelable ep : mGym.getEquipmentList()) {
             data[i++] = ep.getName();
         }
-
         Log.d(TAG, String.format("This mGym has %d equipments", data.length));
         GymEquipmentsRecyclerViewAdapter adapter = new GymEquipmentsRecyclerViewAdapter(getApplicationContext(), data);
         mRecyclerViewEquipments.setAdapter(adapter);

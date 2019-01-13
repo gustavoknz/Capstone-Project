@@ -2,7 +2,6 @@ package com.bora.gustavo;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.bora.gustavo.activities.MainCallback;
 import com.bora.gustavo.helper.LocationHolderSingleton;
@@ -33,7 +31,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class NewGymDialogFragment extends DialogFragment {
     private static final String TAG = "NewGymDialogFragment";
@@ -79,8 +76,8 @@ public class NewGymDialogFragment extends DialogFragment {
 
         builder.setView(dialogView);
         builder.setMessage(R.string.new_gym_dialog_message);
-        builder.setPositiveButton(R.string.save, null);
-        builder.setNegativeButton(R.string.cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
+        builder.setPositiveButton(R.string.new_gym_dialog_save, null);
+        builder.setNegativeButton(R.string.new_gym_dialog_cancel, (dialog, id) -> Log.d(TAG, "User cancelled the dialog"));
         Dialog dialog = builder.create();
         dialog.setOnShowListener(dialogInterface -> {
             Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
@@ -88,7 +85,7 @@ public class NewGymDialogFragment extends DialogFragment {
                 Log.d(TAG, "User tapped save on the dialog");
                 String address = mAddressView.getText().toString().trim();
                 if (TextUtils.isEmpty(address)) {
-                    Toast.makeText(getContext(), "Preencha o endereço aproximado", Toast.LENGTH_SHORT).show();
+                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_fail_address);
                     return;
                 }
                 SparseBooleanArray checked = mEquipmentsListGrid.getCheckedItemPositions();
@@ -99,7 +96,7 @@ public class NewGymDialogFragment extends DialogFragment {
                     }
                 }
                 if (equipmentList.isEmpty()) {
-                    Toast.makeText(getContext(), "Selecione ao menos um aparelho presente na academia", Toast.LENGTH_SHORT).show();
+                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_fail_equipment);
                     return;
                 }
                 LocationHolderSingleton locationSingleton = LocationHolderSingleton.getInstance();
@@ -117,7 +114,7 @@ public class NewGymDialogFragment extends DialogFragment {
                 newGym.setAddress(mAddressView.getText().toString());
                 String userId = Utils.getUserUid();
                 if (userId == null) {
-                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_loged);
+                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_logged);
                     dialog.dismiss();
                 }
                 newGym.setUserId(userId);
@@ -127,7 +124,7 @@ public class NewGymDialogFragment extends DialogFragment {
 
                 if (gymKey == null) {
                     Log.wtf(TAG, "Gym key = null. Weird.");
-                    Toast.makeText(getActivity().getApplicationContext(), "Could not reach server. Please try again later", Toast.LENGTH_SHORT).show();
+                    Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_key_null);
                 } else {
                     mDatabase.child(gymKey).setValue(newGym, (firebaseError, ref) -> {
                         if (firebaseError != null) {

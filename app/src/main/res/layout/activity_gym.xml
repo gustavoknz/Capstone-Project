@@ -17,13 +17,14 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_favorite_not"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/gym_favorite" />
 
         <TextView
             android:id="@+id/gym_address_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Gym location:"
+            android:text="@string/gym_location"
             android:textSize="12sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +35,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="6dp"
             android:layout_marginTop="10dp"
-            android:text="Rua dos Blash, 12038"
             android:textSize="14sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +58,8 @@
             android:src="@drawable/ic_accessible"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/gym_recycler_view_equipments" />
+            app:layout_constraintTop_toBottomOf="@id/gym_recycler_view_equipments"
+            android:contentDescription="@string/gym_accessibility" />
 
         <TextView
             android:id="@+id/gym_accessible_text"
