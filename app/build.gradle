@@ -68,6 +68,17 @@ dependencies {
         exclude module: 'support-annotations'
     }
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
+
+    androidTestImplementation ('org.mockito:mockito-android:2.23.0') {
+        exclude group: 'net.bytebuddy', module: 'byte-buddy'
+        exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
+        exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
+    }
+    // Explicitly include byte-buddy 1.8.22 to fix a build error with Mockito 2.23
+    androidTestImplementation 'net.bytebuddy:byte-buddy:1.8.22'
+    androidTestImplementation 'net.bytebuddy:byte-buddy-android:1.8.22'
+    androidTestImplementation 'net.bytebuddy:byte-buddy-agent:1.8.22'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -66,7 +66,7 @@ public class GymActivity extends BackActivity {
 
     private void getFavoriteInfo() {
         mDatabaseVotes = FirebaseDatabase.getInstance().getReference("votes");
-        mDatabaseVotes.orderByChild("userId").equalTo(Utils.getUserUid()).addValueEventListener(new ValueEventListener() {
+        mDatabaseVotes.orderByChild("userId").equalTo(new Utils().getUserUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 try {
@@ -104,7 +104,7 @@ public class GymActivity extends BackActivity {
         if (mIsFavorite) {
             addFavorite();
         } else {
-            String userId = Utils.getUserUid();
+            String userId = new Utils().getUserUid();
             Log.d(TAG, "Searching gym with user = " + userId);
             removeFavorite();
         }
@@ -112,7 +112,7 @@ public class GymActivity extends BackActivity {
 
     private void addFavorite() {
         Vote vote = new Vote();
-        String userId = Utils.getUserUid();
+        String userId = new Utils().getUserUid();
         if (userId == null) {
             Log.e(TAG, "Could not vote with userId = null");
         } else {
@@ -138,7 +138,7 @@ public class GymActivity extends BackActivity {
 
     private void removeFavorite() {
         mDatabaseVotes = FirebaseDatabase.getInstance().getReference("votes");
-        mDatabaseVotes.orderByChild("userId").equalTo(Utils.getUserUid())
+        mDatabaseVotes.orderByChild("userId").equalTo(new Utils().getUserUid())
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

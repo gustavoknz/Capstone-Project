@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private boolean mMapAnimated = false;
     private List<Gym> mGymsList = new ArrayList<>();
+    private Utils mUtils;
 
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -107,6 +108,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+        setUtilsInstance(null);
     }
 
     private void setLoginVisibility(boolean visible) {
@@ -123,9 +125,17 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    public void setUtilsInstance(Utils utils) {
+        if (utils == null) {
+            mUtils = new Utils();
+        } else {
+            mUtils = utils;
+        }
+    }
+
     @OnClick(R.id.main_fab)
     public void onMainFabClicked(View view) {
-        if (Utils.getUserUid() == null) {
+        if (mUtils.getUserUid() == null) {
             Utils.showSnackbar(findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_logged);
             return;
         }
@@ -245,7 +255,7 @@ public class MainActivity extends AppCompatActivity
         mDatabase.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
+                Log.d(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Gym gym = postSnapshot.getValue(Gym.class);
                     Log.d(TAG, "Got gym: " + gym);

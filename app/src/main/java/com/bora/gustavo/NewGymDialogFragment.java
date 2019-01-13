@@ -112,7 +112,7 @@ public class NewGymDialogFragment extends DialogFragment {
                 newGym.setVotesDown(0);
                 newGym.setVotesUp(0);
                 newGym.setAddress(mAddressView.getText().toString());
-                String userId = Utils.getUserUid();
+                String userId = new Utils().getUserUid();
                 if (userId == null) {
                     Utils.showSnackbar(getActivity().findViewById(android.R.id.content), R.string.snackbar_close, R.string.new_gym_not_logged);
                     dialog.dismiss();

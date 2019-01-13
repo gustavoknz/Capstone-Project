@@ -25,7 +25,7 @@ public class BoraAppWidgetProvider extends AppWidgetProvider {
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
+                Log.d(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
                 long gymCount = dataSnapshot.getChildrenCount();
                 Log.d(TAG, "Total number of registered gyms: " + gymCount);
                 updateGymCount(gymCount);

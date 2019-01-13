@@ -90,7 +90,7 @@ public class SignUpActivity extends BackActivity {
     }
 
     private void addUserToMyTable() {
-        String userId = Utils.getUserUid();
+        String userId = new Utils().getUserUid();
         if (userId == null) {
             Log.w(TAG, "User id is null :/");
         } else {
