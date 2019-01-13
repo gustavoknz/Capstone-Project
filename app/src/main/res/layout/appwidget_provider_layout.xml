@@ -12,7 +12,6 @@
         android:ellipsize="end"
         android:gravity="center"
         android:padding="8dp"
-        android:text="There are 98 gym around you now"
         android:textColor="#FAFAFA"
         android:textSize="18sp" />
 </RelativeLayout>

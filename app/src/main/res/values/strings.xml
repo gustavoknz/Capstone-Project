@@ -2,9 +2,7 @@
     <string name="app_name">Bora Malhar!</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_image_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
     <string name="save">Salvar</string>
     <string name="cancel">Cancelar</string>
@@ -13,4 +11,7 @@
     <string name="gym_accessible_no">This gym may NOT be accessible for disable people</string>
     <string name="gym_accessible_yes">This gym is accessible for disable people</string>
     <string name="map_marker_liked">Liked by %d people</string>
+
+    <string name="appwidget_text">There are %d gym registered</string>
+    <string name="appwidget_text_empty">Could not fetch data</string>
 </resources>
