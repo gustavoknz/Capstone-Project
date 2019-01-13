@@ -9,16 +9,8 @@
             android:icon="@drawable/ic_person"
             android:title="Meu perfil" />
         <item
-            android:id="@+id/nav_favorites"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Favoritos" />
-        <item
-            android:id="@+id/nav_contributions"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Minhas contribuições" />
-        <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_sentiment_very_dissatisfied"
             android:title="Logout" />
     </group>
 

@@ -10,11 +10,11 @@ import android.widget.TextView;
 
 import com.bora.gustavo.R;
 
-public class GymImagesRecyclerViewAdapter extends RecyclerView.Adapter<GymImagesRecyclerViewAdapter.ViewHolder> {
+public class GymEquipmentsRecyclerViewAdapter extends RecyclerView.Adapter<GymEquipmentsRecyclerViewAdapter.ViewHolder> {
     private String[] mData;
     private LayoutInflater mInflater;
 
-    public GymImagesRecyclerViewAdapter(Context context, String[] data) {
+    public GymEquipmentsRecyclerViewAdapter(Context context, String[] data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
     }

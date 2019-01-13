@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bora.gustavo.R;
-import com.bora.gustavo.activities.adapters.GymImagesRecyclerViewAdapter;
+import com.bora.gustavo.activities.adapters.GymEquipmentsRecyclerViewAdapter;
 import com.bora.gustavo.helper.Utils;
 import com.bora.gustavo.models.EquipmentParcelable;
 import com.bora.gustavo.models.GymParcelable;
@@ -59,7 +59,7 @@ public class GymActivity extends BackActivity {
         }
 
         Log.d(TAG, String.format("This mGym has %d equipments", data.length));
-        GymImagesRecyclerViewAdapter adapter = new GymImagesRecyclerViewAdapter(getApplicationContext(), data);
+        GymEquipmentsRecyclerViewAdapter adapter = new GymEquipmentsRecyclerViewAdapter(getApplicationContext(), data);
         mRecyclerViewEquipments.setAdapter(adapter);
 
         getFavoriteInfo();

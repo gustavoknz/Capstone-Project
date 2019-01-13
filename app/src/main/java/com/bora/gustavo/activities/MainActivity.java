@@ -60,7 +60,6 @@ public class MainActivity extends AppCompatActivity
         implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
-    private final static String TAG_GYM = "MainActivity_Gym";
     private static final float MAP_DEFAULT_ZOOM = 15f;
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -95,16 +94,11 @@ public class MainActivity extends AppCompatActivity
         mDatabase = FirebaseDatabase.getInstance().getReference("gyms");
         mAuth = FirebaseAuth.getInstance();
         mAuth.addAuthStateListener(firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser() == null) {
-                //User has just signed out
-                Log.d(TAG, "User has signed out. currentUser is = " +
-                        (mAuth.getCurrentUser() == null ? "null" : "not null"));
-            } else {
-                //User has just signed in
-                Log.d(TAG, "User has signed in. currentUser is = " +
-                        (mAuth.getCurrentUser() == null ? "null" : "not null"));
-            }
+            boolean logged = firebaseAuth.getCurrentUser() != null;
+            Log.d(TAG, "User has signed " + (logged ? "in" : "out"));
+            setLogoutVisibility(logged);
         });
+        setLogoutVisibility(mAuth.getCurrentUser() != null);
 
         setSupportActionBar(mToolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -113,6 +107,12 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         mNavigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void setLogoutVisibility(boolean visible) {
+        Menu navigationViewMenu = mNavigationView.getMenu();
+        Log.d(TAG, "Showing logout view? " + visible);
+        navigationViewMenu.findItem(R.id.nav_logout).setVisible(visible);
     }
 
     private void addGymToMap(Gym gym) {
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity
                 TextView tvEquipments = markerContentView.findViewById(R.id.map_balloon_equipments);
 
                 LatLng latLng = marker.getPosition();
-                Log.d(TAG_GYM, "Clicked on map item: (" + latLng.latitude + ", " + latLng.longitude + ")");
+                Log.d(TAG, "Clicked on map item: (" + latLng.latitude + ", " + latLng.longitude + ")");
                 Gym gym = lookForGym(latLng);
                 if (gym == null) {
                     tvAddress.setText("Gym not found");
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity
                         return gym;
                     }
                 }
-                Log.e(TAG_GYM, "Could not find gym with (" + latLng.latitude + ", " +
+                Log.e(TAG, "Could not find gym with (" + latLng.latitude + ", " +
                         latLng.longitude + ") between all gyms: " + mGymsList);
                 return null;
             }
@@ -243,7 +243,7 @@ public class MainActivity extends AppCompatActivity
                 Log.e(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
                 for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
                     Gym gym = postSnapshot.getValue(Gym.class);
-                    Log.d(TAG_GYM, "Got gym: " + gym);
+                    Log.d(TAG, "Got gym: " + gym);
                     if (gym == null) {
                         Log.e(TAG, "Got a gym == null in my database");
                     } else {
@@ -313,10 +313,6 @@ public class MainActivity extends AppCompatActivity
                 Log.d(TAG, "I know you!");
                 startActivity(new Intent(MainActivity.this, ProfileActivity.class));
             }
-        } else if (id == R.id.nav_favorites) {
-            Log.d(TAG, "Favorites clicked");
-        } else if (id == R.id.nav_contributions) {
-            Log.d(TAG, "Contributions clicked");
         } else if (id == R.id.nav_logout) {
             Log.d(TAG, "Logout clicked");
             mAuth.signOut();
