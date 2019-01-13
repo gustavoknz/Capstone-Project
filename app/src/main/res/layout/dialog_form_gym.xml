@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:hint="Address"
+        android:hint="@string/new_gym_dialog_hint_address"
         android:inputType="textPostalAddress" />
 
     <GridView
@@ -28,6 +28,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
-        android:text="Adequada para pessoas com deficiencia"
+        android:text="@string/new_gym_dialog_pcd_able_text"
         app:layout_constraintTop_toBottomOf="@id/form_gym_equipments_grid" />
 </android.support.constraint.ConstraintLayout>
