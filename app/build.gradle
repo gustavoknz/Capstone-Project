@@ -1,6 +1,21 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            Properties localProps = new Properties()
+            localProps.load(new FileInputStream(file('../local.properties')))
+            Properties keyProps = new Properties()
+            assert localProps['keystore.props.file']
+
+            keyProps.load(new FileInputStream(file(localProps['keystore.props.file'])))
+
+            storeFile file(keyProps["RELEASE_STORE_FILE"])
+            keyAlias keyProps["RELEASE_KEY_ALIAS"]
+            storePassword keyProps["RELEASE_STORE_PASSWORD"]
+            keyPassword keyProps["RELEASE_KEY_PASSWORD"]
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.bora.gustavo"
@@ -13,10 +28,14 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
+            shrinkResources false
+            useProguard false
             debuggable true
         }
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -31,9 +50,8 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'android.arch.core:runtime:1.1.1'
-
     implementation 'com.android.support:animated-vector-drawable:28.0.0'
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
@@ -42,24 +60,19 @@ dependencies {
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:support-media-compat:28.0.0'
     implementation 'com.android.support:support-v4:28.0.0'
-
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-maps:16.0.0'
-
     // Firebase Realtime Database
     implementation 'com.google.firebase:firebase-auth:16.1.0'
     implementation 'com.google.firebase:firebase-core:16.0.6'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-storage:16.0.5'
-
     // Butter knife
     implementation 'com.jakewharton:butterknife:9.0.0-rc3'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc3'
-
     // Dexter runtime permissions
     implementation 'com.karumi:dexter:4.2.0'
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2') {
         exclude module: 'support-annotations'
@@ -69,8 +82,7 @@ dependencies {
     }
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.2'
-
-    androidTestImplementation ('org.mockito:mockito-android:2.23.0') {
+    androidTestImplementation('org.mockito:mockito-android:2.23.0') {
         exclude group: 'net.bytebuddy', module: 'byte-buddy'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-android'
         exclude group: 'net.bytebuddy', module: 'byte-buddy-agent'
