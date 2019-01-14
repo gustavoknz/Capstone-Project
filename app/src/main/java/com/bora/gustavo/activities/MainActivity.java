@@ -60,14 +60,14 @@ public class MainActivity extends AppCompatActivity
         implements GoogleMap.OnInfoWindowClickListener, OnMapReadyCallback,
         NavigationView.OnNavigationItemSelectedListener, MainCallback {
     private final static String TAG = "MainActivity";
-    private static final float MAP_DEFAULT_ZOOM = 15f;
+    private final static float MAP_DEFAULT_ZOOM = 15f;
+    private final List<Gym> mGymsList = new ArrayList<>();
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location mLastLocation;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private boolean mMapAnimated = false;
-    private List<Gym> mGymsList = new ArrayList<>();
     private Utils mUtils;
 
     @BindView(R.id.drawer_layout)

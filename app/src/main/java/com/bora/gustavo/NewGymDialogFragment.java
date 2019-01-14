@@ -39,10 +39,8 @@ public class NewGymDialogFragment extends DialogFragment {
 
     @BindView(R.id.form_gym_address)
     EditText mAddressView;
-
     @BindView(R.id.form_gym_equipments_grid)
     GridView mEquipmentsListGrid;
-
     @BindView(R.id.form_gym_pcd_able)
     CheckBox mPcdAble;
 

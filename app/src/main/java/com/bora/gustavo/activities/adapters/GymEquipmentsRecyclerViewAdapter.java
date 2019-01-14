@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.bora.gustavo.R;
 
 public class GymEquipmentsRecyclerViewAdapter extends RecyclerView.Adapter<GymEquipmentsRecyclerViewAdapter.ViewHolder> {
-    private String[] mData;
-    private LayoutInflater mInflater;
+    private final String[] mData;
+    private final LayoutInflater mInflater;
 
     public GymEquipmentsRecyclerViewAdapter(Context context, String[] data) {
         this.mInflater = LayoutInflater.from(context);
@@ -37,7 +37,7 @@ public class GymEquipmentsRecyclerViewAdapter extends RecyclerView.Adapter<GymEq
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView equipmentTextView;
+        final TextView equipmentTextView;
 
         ViewHolder(View itemView) {
             super(itemView);

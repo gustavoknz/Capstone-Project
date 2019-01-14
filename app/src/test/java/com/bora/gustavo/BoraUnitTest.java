@@ -14,6 +14,8 @@ import static org.junit.Assert.*;
 public class BoraUnitTest {
     @Test
     public void UuidIsNotNull() {
-        assertNotNull("UUID must not be null", Utils.createUuid());
+        String uuid = Utils.createUuid();
+        assertNotNull("UUID must not be null", uuid);
+        assertNotEquals("UUID must not be empty", "", uuid);
     }
 }

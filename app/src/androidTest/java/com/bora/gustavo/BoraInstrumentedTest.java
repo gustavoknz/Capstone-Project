@@ -34,7 +34,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(AndroidJUnit4.class)
 public class BoraInstrumentedTest {
     @Rule
-    public ActivityTestRule<MainActivity> mMainActivityTestRule =
+    public final ActivityTestRule<MainActivity> mMainActivityTestRule =
             new ActivityTestRule<>(MainActivity.class, true, true);
 
     @Before
