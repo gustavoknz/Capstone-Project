@@ -69,7 +69,7 @@ public class NewGymDialogFragment extends DialogFragment {
 
         final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_multiple_choice,
-                getResources().getStringArray(R.array.equipments_list));
+                getResources().getStringArray(R.array.new_gym_dialog_equipments_list));
         mEquipmentsListGrid.setAdapter(arrayAdapter);
 
         builder.setView(dialogView);

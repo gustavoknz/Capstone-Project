@@ -25,13 +25,12 @@ public class BoraAppWidgetProvider extends AppWidgetProvider {
         database.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Gyms retrieved from database: " + dataSnapshot.getChildrenCount());
                 long gymCount = dataSnapshot.getChildrenCount();
                 Log.d(TAG, "Total number of registered gyms: " + gymCount);
-                updateGymCount(gymCount);
+                updateGymCount((int) Math.min(Integer.MAX_VALUE, gymCount));
             }
 
-            private void updateGymCount(long gymCount) {
+            private void updateGymCount(int gymCount) {
                 Intent intent;
                 PendingIntent pendingIntent;
                 RemoteViews views;
@@ -39,12 +38,15 @@ public class BoraAppWidgetProvider extends AppWidgetProvider {
                     intent = new Intent(context, MainActivity.class);
                     pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
                     views = new RemoteViews(context.getPackageName(), R.layout.appwidget_provider_layout);
-                    views.setOnClickPendingIntent(R.id.appwidget_text, pendingIntent);
-                    if (gymCount >= 0) {
-                        views.setTextViewText(R.id.appwidget_text, context.getString(R.string.appwidget_text, gymCount));
+                    views.setOnClickPendingIntent(R.id.appwidget_text_view, pendingIntent);
+                    Log.d(TAG, String.format("Updating appwidget #%d with gym count to %d", appWidgetId, gymCount));
+                    String text;
+                    if (gymCount > 0) {
+                        text = context.getResources().getQuantityString(R.plurals.appwidget_text, gymCount, gymCount);
                     } else {
-                        views.setTextViewText(R.id.appwidget_text, context.getString(R.string.appwidget_text_empty));
+                        text = context.getString(R.string.appwidget_text_empty);
                     }
+                    views.setTextViewText(R.id.appwidget_text_view, text);
                     appWidgetManager.updateAppWidget(appWidgetId, views);
                 }
             }

@@ -3,7 +3,7 @@
     <string name="snackbar_close">CLOSE</string>
     <string name="main_location_not_found">Could not retrieve location</string>
 
-    <string name="map_marker_liked">Liked by %d people</string>
+    <string name="map_marker_equipment">equipment registered</string>
     <string name="map_marker_equipments">equipments registered</string>
     <string name="map_marker_gym_not_found">Gym not found</string>
 
@@ -20,9 +20,21 @@
     <string name="gym_accessible_yes">This gym is accessible for disable people</string>
     <string name="gym_accessibility">Gym accessibility</string>
 
-    <string name="appwidget_text">There are %d gym registered</string>
-    <string name="appwidget_text_empty">Could not fetch data</string>
+    <string name="appwidget_text_empty">No gym registered yet</string>
+    <plurals name="appwidget_text">
+        <item quantity="one">There is %d gym registered</item>
+        <item quantity="other">There are %d gyms registered</item>
+    </plurals>
 
+    <string-array name="new_gym_dialog_equipments_list">
+        <item>Shoulder wheel</item>
+        <item>Triceps machine</item>
+        <item>Bike tower</item>
+        <item>Biceps machine</item>
+        <item>Walking simulator</item>
+        <item>High bar</item>
+        <item>Rowing machine</item>
+    </string-array>
     <string name="new_gym_dialog_message">Register a new gym</string>
     <string name="new_gym_dialog_save">Save</string>
     <string name="new_gym_dialog_cancel">Cancel</string>

@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity
             }
 
             private CharSequence getFormattedStringForEquipments(int numberOfEquipments) {
-                String text = getString(R.string.map_marker_equipments);
                 String numberText = Integer.toString(numberOfEquipments);
                 SpannableStringBuilder equipmentsString = new SpannableStringBuilder();
                 int startBold = 0;
@@ -189,6 +188,12 @@ public class MainActivity extends AppCompatActivity
                 equipmentsString.setSpan(new StyleSpan(android.graphics.Typeface.BOLD),
                         startBold, equipmentsString.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 equipmentsString.append(' ');
+                String text;
+                if (numberOfEquipments > 1) {
+                    text = getString(R.string.map_marker_equipments);
+                } else {
+                    text = getString(R.string.map_marker_equipment);
+                }
                 equipmentsString.append(text);
                 return equipmentsString;
             }
