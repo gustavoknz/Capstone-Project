@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Bora Malhar!</string>
+    <string name="snackbar_close">FECHAR</string>
+    <string name="main_location_not_found">Não foi possível recuperar sua localização</string>
+
+    <string name="map_marker_equipment">equipamento registrado</string>
+    <string name="map_marker_equipments">equipamentos registrados</string>
+    <string name="map_marker_gym_not_found">Academia não encontrada</string>
+
+    <string name="navigation_login">Entrar</string>
+    <string name="navigation_logout">Sair</string>
+    <string name="navigation_open">Abrir aba de navegação</string>
+    <string name="navigation_close">Fechar aba de navegação</string>
+    <string name="navigation_header_image_desc">Cabeçalho da navegação</string>
+    <string name="action_settings">Configurações</string>
+
+    <string name="gym_location">Localização da academia:</string>
+    <string name="gym_favorite">Favorita</string>
+    <string name="gym_accessible_no">Essa academia pode NÃO ser adaptável para pessoas com deficiência</string>
+    <string name="gym_accessible_yes">Essa academia é adaptável para pessoas com deficiência</string>
+    <string name="gym_accessibility">Accessibilidade da academia</string>
+
+    <string name="appwidget_text_empty">Nenhuma academia registrada</string>
+    <plurals name="appwidget_text">
+        <item quantity="one">Existe %d academia registrada</item>
+        <item quantity="other">Existem %d academias registradas</item>
+    </plurals>
+
+    <string-array name="new_gym_dialog_equipments_list">
+        <item>Roda de ombro</item>
+        <item>Máquina de tríceps</item>
+        <item>Torre de bicicleta</item>
+        <item>Máquina de bíceps</item>
+        <item>Simulador de caminhada</item>
+        <item>Barra alta</item>
+        <item>Máquina de remada</item>
+    </string-array>
+    <string name="new_gym_dialog_message">Cadastre uma nova academia</string>
+    <string name="new_gym_dialog_save">Salvar</string>
+    <string name="new_gym_dialog_cancel">Cancelar</string>
+    <string name="new_gym_dialog_hint_address">Endereço</string>
+    <string name="new_gym_dialog_pcd_able_text">Adequada para pessoas com deficiência</string>
+    <string name="new_gym_not_logged">Por favor primeiro faça login</string>
+    <string name="new_gym_fail_address">Preencha o endereço aproximado</string>
+    <string name="new_gym_fail_equipment">Selecione ao menos um equipamento</string>
+    <string name="new_gym_key_null">Não foi possível comunicar-se com o servidor. Por favor tente novamente mais tarde.</string>
+
+    <string name="reset_password_sent_ok">Nós enviamos-lhe informações para você redefinir sua senha</string>
+    <string name="reset_password_sent_fail">Falha ao enviar e-mail de redefinição</string>
+    <string name="reset_password_no_email">Informe seu e-mail de registro</string>
+
+    <string name="sign_up_hint_name">Nome</string>
+    <string name="sign_up_hint_email">E-mail</string>
+    <string name="sign_up_hint_password">Senha</string>
+    <string name="sign_up_hint_register">Cadastre-se</string>
+    <string name="sign_up_hint_forgot_password">Esqueci a senha</string>
+    <string name="sign_up_hint_login">Entrar</string>
+    <string name="sign_up_fail_name">Informe seu nome</string>
+    <string name="sign_up_fail_address">Informe um e-mail válido</string>
+    <string name="sign_up_fail_password">A senha deve ter entre 6 e 14 caracteres</string>
+
+    <string name="login_fail_email">Informe um e-mail válido</string>
+    <string name="login_fail_password">A senha deve ter entre 6 e 14 caracteres</string>
+    <string name="login_fail">Falha no login</string>
+    <string name="login_email">E-mail</string>
+    <string name="login_password">Senha</string>
+    <string name="login_button">Entrar</string>
+    <string name="login_forgot_password">Esqueci a senha</string>
+    <string name="login_register">Cadastre-se</string>
+
+    <string name="reset_password_forgot">Esqueceu a senha?</string>
+    <string name="reset_password_hint_email">E-mail</string>
+    <string name="reset_password_reset">Redefinir a senha</string>
+    <string name="reset_password_back">Voltar</string>
+    <string name="reset_password_image">Ícone do aplicativo</string>
+    <string name="reset_password_message">Precisamos somente do e-mail que você usou no cadastro para enviar-lhe as instruções para resetar a senha</string>
+</resources>

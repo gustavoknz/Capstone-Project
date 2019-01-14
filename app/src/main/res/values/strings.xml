@@ -73,6 +73,5 @@
     <string name="reset_password_reset">Password reset</string>
     <string name="reset_password_back">Back</string>
     <string name="reset_password_image">App icon</string>
-    <string name="reset_password_message">We need only the email you used when signed up to send you the instructions to reset the password.</string>
-    <string name="reset_password_message2">Precisamos somente do e-mail que voce usou no cadastro para lhe enviar as instrucoes para resetar a senha.</string>
+    <string name="reset_password_message">We need only the email you used when signed up to send you the instructions to reset the password</string>
 </resources>
